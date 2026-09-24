@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConexionesDB {
     private static final String URL = "jdbc:mysql://localhost:3306/reto_ventas_dao";
 	private static final String USER = "dam";
-	private static final String PASS = "1234";
+	private static final String PASS =  "1234";
 
 	public static Connection getConnection() {
 		Connection con = null; 

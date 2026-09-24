@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/BOSS/Documents/NetBeansProjects/trabajo1/src/trabajo1/Trabajo1.java</file>
-=======
-            <file>file:/C:/Users/2DAM/Documents/NetBeansProjects/Trabajo01/src/trabajo1/Trabajo1.java</file>
->>>>>>> 1175e04132c03dd9152518973b30c5824da3281d
+            <file>file:/C:/Users/2DAM/Documents/NetBeansProjects/Trabajo01/src/trabajo1/utilidades/ModeloLibro.java</file>
+            <file>file:/C:/Users/2DAM/Documents/NetBeansProjects/Trabajo01/src/trabajo1/main/Main.java</file>
+            <file>file:/C:/Users/2DAM/Documents/NetBeansProjects/Trabajo01/src/trabajo1/utilidades/LibroRepository.java</file>
+            <file>file:/C:/Users/2DAM/Documents/NetBeansProjects/Trabajo01/src/trabajo1/conectores/ConexionesDB.java</file>
         </group>
     </open-files>
 </project-private>

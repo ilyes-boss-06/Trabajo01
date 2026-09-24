@@ -8,7 +8,7 @@ package trabajo1.utilidades;
  *
  * @author 2DAM
  */
-public class ModeloLibro {
+public class ModeloLibro{
 String id;
 String titulo;
 String autor;
