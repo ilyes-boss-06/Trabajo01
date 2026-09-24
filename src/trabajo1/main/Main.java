@@ -6,6 +6,7 @@ package trabajo1.main;
 
 import java.util.Locale;
 import java.util.Scanner;
+import trabajo1.utilidades.LibroRepositoryArchivo;
 import trabajo1.utilidades.LibroRepositoryMySQL;
 import trabajo1.utilidades.ModeloLibro;
 
@@ -21,6 +22,7 @@ public class Main {
     public static void main(String[] args) {
         
         LibroRepositoryMySQL libroRepo = new LibroRepositoryMySQL();
+        LibroRepositoryArchivo libroArchivo = new LibroRepositoryArchivo();
         
         System.out.println("""
                                      **MENU** 
@@ -62,7 +64,7 @@ public class Main {
                 
             }
             case 8 -> {
-                
+                libroArchivo.CopiarArchivos();
             }
             case 0 -> {
                 
