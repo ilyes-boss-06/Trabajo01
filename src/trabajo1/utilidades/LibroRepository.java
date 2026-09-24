@@ -9,14 +9,15 @@ import java.util.List;
 /**
  *
  * @author 2DAM
+ * @param <T>
  */
 public interface LibroRepository<T> {
     List<T> mostrarLibros();
-    T obtenerPorTitulo(int titulo);
-    public void buscarPorRango();
-    public void buscarPorCantidadStock();
+    T obtenerPorTitulo(String titulo);
+    T buscarPorRango(int rango);
+    T buscarPorCantidadStock(int stock);
     boolean insertar(T objeto);
-    T eliminarPorTitulo(int titulo);
+    T eliminarPorTitulo(String titulo);
     public void CopiarArchivos();
     
 }

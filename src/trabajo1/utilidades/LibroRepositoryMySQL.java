@@ -40,34 +40,26 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     }
 
     @Override
-    public ModeloLibro obtenerPorTitulo(int titulo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ModeloLibro obtenerPorTitulo(String titulo) {
+        String sql = "select * from libros where titulo = ?";
+
+		try (Connection conn = ConexionesDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, titulo);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return mapearFila(rs);
+				}
+			}
+
+		} catch (SQLException e) {
+			System.err.println("Error SQL al buscar " + titulo + ": " + e.getMessage());
+		}
+		return null; // no encontrado
     }
 
-    @Override
-    public void buscarPorRango() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void buscarPorCantidadStock() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean insertar(ModeloLibro objeto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public ModeloLibro eliminarPorTitulo(int titulo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void CopiarArchivos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
     
     private ModeloLibro mapearFila(ResultSet rs) throws SQLException {
 		ModeloLibro libro = new ModeloLibro();
@@ -79,5 +71,44 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
 		return libro;
 
 	}
+    @Override
+    public boolean insertar(ModeloLibro objeto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public ModeloLibro eliminarPorTitulo(String titulo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void CopiarArchivos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public ModeloLibro buscarPorRango(int rango) {
+         String sql = "select * from libros where precio > ?";
+
+		try (Connection conn = ConexionesDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setInt(1, rango);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return mapearFila(rs);
+				}
+			}
+
+		} catch (SQLException e) {
+			System.err.println("Error SQL al buscar libros con precio mayor a " + rango + "€ " + e.getMessage());
+		}
+		return null; // no encontrado
+    }
+
+    @Override
+    public ModeloLibro buscarPorCantidadStock(int stock) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
