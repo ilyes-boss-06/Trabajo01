@@ -4,6 +4,7 @@
  */
 package trabajo1.conectores;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,9 +14,11 @@ import java.sql.SQLException;
  * @author BOSS
  */
 public class ConexionesDB {
-    private static final String URL = getConnection(../);
-	private static final String USER = "dam";
-	private static final String PASS =  "1234";
+	private static final Dotenv dotenv = Dotenv.load();
+
+	private static final String URL = dotenv.get("DB_URL");
+	private static final String USER = dotenv.get("DB_USER");
+	private static final String PASS = dotenv.get("DB_PASSWORD");
 
 	public static Connection getConnection() {
 		Connection con = null; 
