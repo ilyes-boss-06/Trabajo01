@@ -68,5 +68,10 @@ int stock;
         this.stock = stock;
     }
 
+    @Override
+    public String toString() {
+        return "ModeloLibro{" + "id=" + id + ", titulo=" + titulo + ", autor=" + autor + ", precio=" + precio + ", stock=" + stock + '}';
+    }
 
+    
 }
