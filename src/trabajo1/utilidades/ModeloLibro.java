@@ -15,6 +15,11 @@ String autor;
 double precio;
 int stock;
 
+    public ModeloLibro() {
+    }
+
+
+
     public ModeloLibro(String id, String titulo, String autor, double precio, int stock) {
         this.id = id;
         this.titulo = titulo;
