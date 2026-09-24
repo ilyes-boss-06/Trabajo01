@@ -26,43 +26,62 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
     @Override
     public List<ModeloLibro> mostrarLibros() {
         List<ModeloLibro> libros = new ArrayList<>();
+        BufferedReader br = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                if (!linea.isBlank()) {
+        try {
+            br = new BufferedReader(new FileReader(ARCHIVO));
+            String linea = br.readLine();
+            while (linea != null) {
+                if (!linea.trim().equals("")) {
                     libros.add(mapearLinea(linea));
                 }
+                linea = br.readLine();
             }
         } catch (IOException e) {
             System.err.println("Error al leer el archivo de libros: " + e.getMessage());
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                System.err.println("Error al cerrar el archivo de libros: " + e.getMessage());
+            }
         }
         return libros;
     }
 
     @Override
-    public ModeloLibro obtenerPorTitulo(int titulo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ModeloLibro obtenerPorTitulo(String titulo) {
+        List<ModeloLibro> libros = mostrarLibros();
+
+        for (int i = 0; i < libros.size(); i++) {
+            ModeloLibro libro = libros.get(i);
+            if (libro.getTitulo().equalsIgnoreCase(titulo)) {
+                return libro;
+            }
+        }
+        return null;
     }
 
     @Override
-    public void buscarPorRango() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ModeloLibro buscarPorRango(int rango) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void buscarPorCantidadStock() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ModeloLibro buscarPorCantidadStock(int stock) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public boolean insertar(ModeloLibro objeto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public ModeloLibro eliminarPorTitulo(int titulo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ModeloLibro eliminarPorTitulo(String titulo) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -71,28 +90,34 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
      */
     @Override
     public void CopiarArchivos() {
-        List<ModeloLibro> libros = new LibroRepositoryMySQL().mostrarLibros();
-        guardarLibros(libros);
-        System.out.println("Se han copiado " + libros.size() + " libros a " + ARCHIVO);
-    }
+        LibroRepositoryMySQL repoMySQL = new LibroRepositoryMySQL();
+        List<ModeloLibro> libros = repoMySQL.mostrarLibros();
+        BufferedWriter bw = null;
 
-    private void guardarLibros(List<ModeloLibro> libros) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO))) {
-            for (ModeloLibro libro : libros) {
-                bw.write(libroALinea(libro));
+        try {
+            bw = new BufferedWriter(new FileWriter(ARCHIVO));
+            for (int i = 0; i < libros.size(); i++) {
+                ModeloLibro libro = libros.get(i);
+                String linea = libro.getId() + SEPARADOR
+                        + libro.getTitulo() + SEPARADOR
+                        + libro.getAutor() + SEPARADOR
+                        + libro.getPrecio() + SEPARADOR
+                        + libro.getStock();
+                bw.write(linea);
                 bw.newLine();
             }
+            System.out.println("Se han copiado " + libros.size() + " libros a " + ARCHIVO);
         } catch (IOException e) {
             System.err.println("Error al escribir el archivo de libros: " + e.getMessage());
+        } finally {
+            try {
+                if (bw != null) {
+                    bw.close();
+                }
+            } catch (IOException e) {
+                System.err.println("Error al cerrar el archivo de libros: " + e.getMessage());
+            }
         }
-    }
-
-    private String libroALinea(ModeloLibro libro) {
-        return libro.getId() + SEPARADOR
-                + libro.getTitulo() + SEPARADOR
-                + libro.getAutor() + SEPARADOR
-                + libro.getPrecio() + SEPARADOR
-                + libro.getStock();
     }
 
     private ModeloLibro mapearLinea(String linea) {

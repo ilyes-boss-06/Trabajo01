@@ -6,6 +6,7 @@ package trabajo1.main;
 
 import java.util.Locale;
 import java.util.Scanner;
+import trabajo1.utilidades.LibroRepository;
 import trabajo1.utilidades.LibroRepositoryArchivo;
 import trabajo1.utilidades.LibroRepositoryMySQL;
 import trabajo1.utilidades.ModeloLibro;
@@ -23,6 +24,8 @@ public class Main {
         
         LibroRepositoryMySQL libroRepo = new LibroRepositoryMySQL();
         LibroRepositoryArchivo libroArchivo = new LibroRepositoryArchivo();
+        
+        
         
         System.out.println("""
                                      **MENU** 
@@ -46,7 +49,23 @@ public class Main {
                    }
             }
             case 2 -> {
-                
+                sc.nextLine();
+                System.out.print("Introduce el titulo: ");
+                String titulo = sc.nextLine();
+
+                ModeloLibro libroBD = libroRepo.obtenerPorTitulo(titulo);
+                if (libroBD != null) {
+                    System.out.println("En la base de datos: " + libroBD);
+                } else {
+                    System.out.println("No se ha encontrado en la base de datos.");
+                }
+
+                ModeloLibro libroTxt = libroArchivo.obtenerPorTitulo(titulo);
+                if (libroTxt != null) {
+                    System.out.println("En el archivo: " + libroTxt);
+                } else {
+                    System.out.println("No se ha encontrado en el archivo.");
+                }
             }
             case 3 -> {
                 
