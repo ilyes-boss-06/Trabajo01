@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * @author BOSS
  */
 public class ConexionesDB {
-    private static final String URL = "jdbc:mysql://localhost:3306/reto_ventas_dao";
+    private static final String URL = getConnection(../);
 	private static final String USER = "dam";
 	private static final String PASS = "1234";
 
