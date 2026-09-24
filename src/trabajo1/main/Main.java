@@ -4,7 +4,10 @@
  */
 package trabajo1.main;
 
+import java.util.Locale;
 import java.util.Scanner;
+import trabajo1.utilidades.LibroRepositoryMySQL;
+import trabajo1.utilidades.ModeloLibro;
 
 /**
  *
@@ -15,50 +18,56 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String[] args) {
-        System.out.println("          **MENU** \n"
-                + "1. Mostrar todos los libros \n"
-                + "2. Buscar libro por titulo \n"
-                + "3. Buscar libro por autor \n"
-                + "4. Buscar libro por rango de precio \n"
-                + "5. Buscar libro por cantidad de stock \n"
-                + "6. Insertar libro \n"
-                + "7. Eliminar libro por titulo \n"
-                + "8. Hacer copia de los datos del repositorio \n"
-                + "0. Salir" ); 
         
-         Scanner sc = new Scanner(System.in);
+        LibroRepositoryMySQL libroRepo = new LibroRepositoryMySQL();
+        
+        System.out.println("""
+                                     **MENU** 
+                           1. Mostrar todos los libros 
+                           2. Buscar libro por titulo 
+                           3. Buscar libro por autor 
+                           4. Buscar libro por rango de precio 
+                           5. Buscar libro por cantidad de stock 
+                           6. Insertar libro 
+                           7. Eliminar libro por titulo 
+                           8. Hacer copia de los datos del repositorio 
+                           0. Salir"""); 
+        
+         Scanner sc;
+        sc = new Scanner(System.in).useLocale(Locale.US);
         
         switch (sc.nextInt()) {
-            case 1: 
+            case 1 -> { 
+                for (ModeloLibro libro : libroRepo.mostrarLibros()) {
+                    System.out.println(libro);
+                   }
+            }
+            case 2 -> {
                 
-                break;
-            case 2: 
+            }
+            case 3 -> {
                 
-                break;
-            case 3: 
+            }
+            case 4 -> {
                 
-                break;
-            case 4: 
+            }
+            case 5 -> {
                 
-                break;
-            case 5: 
+            }
+            case 6 -> {
                 
-                break;
-            case 6: 
+            }
+            case 7 -> {
                 
-                break;
-            case 7: 
+            }
+            case 8 -> {
                 
-                break;
-            case 8: 
+            }
+            case 0 -> {
                 
-                break;
-            case 0:
-                break;  
-            default:
-                throw new AssertionError();
+            }
+            default -> throw new AssertionError();
         }
         
         

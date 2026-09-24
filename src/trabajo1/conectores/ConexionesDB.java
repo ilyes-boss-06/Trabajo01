@@ -16,9 +16,9 @@ import java.sql.SQLException;
 public class ConexionesDB {
 	private static final Dotenv dotenv = Dotenv.load();
 
-	private static final String URL = dotenv.get("DB_URL");
-	private static final String USER = dotenv.get("DB_USER");
-	private static final String PASS = dotenv.get("DB_PASSWORD");
+	private static final String URL = dotenv.get("db.url");
+	private static final String USER = dotenv.get("db.user");
+	private static final String PASS = dotenv.get("db.password");
 
 	public static Connection getConnection() {
 		Connection con = null; 

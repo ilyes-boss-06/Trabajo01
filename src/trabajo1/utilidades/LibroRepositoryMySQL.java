@@ -22,7 +22,7 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     @Override
     public List<ModeloLibro> mostrarLibros() {
         List<ModeloLibro> Libros = new ArrayList<>();
-	    String sql = "select * from libro;";
+	    String sql = "select * from libros;";
 
 			try (Connection conn = ConexionesDB.getConnection();
 					PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -34,7 +34,7 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
 				}
 
 			} catch (SQLException e) {
-				System.err.println("Error SQL al obtener todos los clientes: " + e.getMessage());
+				System.err.println("Error SQL al obtener todos los libros: " + e.getMessage());
 			}
 			return Libros;
     }
