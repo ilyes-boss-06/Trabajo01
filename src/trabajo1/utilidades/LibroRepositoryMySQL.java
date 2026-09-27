@@ -56,7 +56,7 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
 		} catch (SQLException e) {
 			System.err.println("Error SQL al buscar " + titulo + ": " + e.getMessage());
 		}
-		return null; // no encontrado
+		return null;
     }
 
     
@@ -130,8 +130,26 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     }
 
     @Override
-    public List<ModeloLibro> buscarPorCantidadStock(int stock) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<ModeloLibro> buscarPorCantidadStock(int stockMinimo) {
+        List<ModeloLibro> libros = new ArrayList<>();
+        String sql = "select * from libros where stock >= ?";
+
+        try (Connection conn = ConexionesDB.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, stockMinimo);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    libros.add(mapearFila(rs));
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return libros;
     }
+
     
 }
