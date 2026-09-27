@@ -108,7 +108,15 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
     @Override
     public ModeloLibro eliminarPorTitulo(String titulo) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<ModeloLibro> libros = mostrarLibros();
+
+        for (int i = 0; i < libros.size(); i++) {
+            if (libros.get(i).getTitulo().equals(titulo)) {
+                libros.remove(i);
+                return guardarLibros(libros);
+            }
+        }
+        return false;
     }
 
     /**
