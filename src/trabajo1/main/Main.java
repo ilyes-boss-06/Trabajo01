@@ -67,110 +67,28 @@ public class Main {
 
             switch (opcion) {
                 case 1 -> {
-                    List<ModeloLibro> libros = repo.mostrarLibros();
-                    if (libros.isEmpty()) {
-                        System.out.println("No hay libros.");
-                    } else {
-                        for (ModeloLibro libro : libros) {
-                            System.out.println(libro);
-                        }
-                    }
+                    caso1(repo);
                 }
                 case 2 -> {
-                    System.out.print("Introduce el titulo: ");
-                    String titulo = sc.nextLine();
-
-                    ModeloLibro libro = repo.obtenerPorTitulo(titulo);
-                    if (libro != null) {
-                        System.out.println(libro);
-                    } else {
-                        System.out.println("No se ha encontrado ningun libro con ese titulo.");
-                    }
+                    caso2(sc, repo);
                 }
                 case 3 -> {
-                    System.out.print("Introduce el autor: ");
-                    String autor = sc.nextLine();
-
-                    List<ModeloLibro> libros = repo.buscarPorAutor(autor);
-                    if (libros.isEmpty()) {
-                        System.out.println("No hay libros de ese autor.");
-                    } else {
-                        for (ModeloLibro libro : libros) {
-                            System.out.println(libro);
-                        }
-                    }
+                    caso3(sc, repo);
                 }
                 case 4 -> {
-                    System.out.print("Precio minimo: ");
-                    double precioMin = sc.nextDouble();
-                    sc.nextLine();
-                    System.out.print("Precio maximo: ");
-                    double precioMax = sc.nextDouble();
-                    sc.nextLine();
-
-                    if (precioMin > precioMax) {
-                        double aux = precioMin;
-                        precioMin = precioMax;
-                        precioMax = aux;
-                    }
-
-                    List<ModeloLibro> libros = repo.buscarPorRango(precioMin, precioMax);
-                    if (libros.isEmpty()) {
-                        System.out.println("No hay libros.");
-                    } else {
-                        for (int i = 0; i < libros.size(); i++) {
-                            System.out.println(libros.get(i));
-                        }
-                    }
+                    caso4(sc, repo);
                 }
                 case 5 -> {
-                    System.out.print("Stock minimo: ");
-                    int stock = sc.nextInt();
-                    sc.nextLine();
-
-                    List<ModeloLibro> libros = repo.buscarPorCantidadStock(stock);
-                    if (libros.isEmpty()) {
-                        System.out.println("No hay libros con ese stock o mas.");
-                    } else {
-                        for (ModeloLibro libro : libros) {
-                            System.out.println(libro);
-                        }
-                    }
+                    caso5(sc, repo);
                 }
                 case 6 -> {
-                    System.out.print("Id: ");
-                    String id = sc.nextLine();
-                    System.out.print("Titulo: ");
-                    String titulo = sc.nextLine();
-                    System.out.print("Autor: ");
-                    String autor = sc.nextLine();
-                    System.out.print("Precio: ");
-                    double precio = sc.nextDouble();
-                    sc.nextLine();
-                    System.out.print("Stock: ");
-                    int stock = sc.nextInt();
-                    sc.nextLine();
-
-                    ModeloLibro libro = new ModeloLibro(id, titulo, autor, precio, stock);
-                    if (repo.insertar(libro)) {
-                        System.out.println("Libro insertado correctamente.");
-                    } else {
-                        System.out.println("No se ha podido insertar el libro.");
-                    }
+                    caso6(sc, repo);
                 }
                 case 7 -> {
-                    System.out.print("Titulo del libro a eliminar: ");
-                    String titulo = sc.nextLine();
-
-                    ModeloLibro eliminado = repo.eliminarPorTitulo(titulo);
-                    if (eliminado != null) {
-                        System.out.println("Libro eliminado: " + eliminado);
-                    } else {
-                        System.out.println("No se ha encontrado ningun libro con ese titulo.");
-                    }
+                    caso7(sc, repo);
                 }
                 case 8 -> {
-                    repo.CopiarArchivos();
+                    caso8(repo);
                 }
                 case 0 -> {
                     System.out.println("Saliendo...");
@@ -180,5 +98,119 @@ public class Main {
         } while (opcion != 0);
 
         sc.close();
+    }
+
+    public static void caso8(LibroRepository<ModeloLibro> repo) {
+        repo.CopiarArchivos();
+    }
+
+    public static void caso7(Scanner sc, LibroRepository<ModeloLibro> repo) {
+        System.out.print("Titulo del libro a eliminar: ");
+        String titulo = sc.nextLine();
+        
+        ModeloLibro eliminado = repo.eliminarPorTitulo(titulo);
+        if (eliminado != null) {
+            System.out.println("Libro eliminado: " + eliminado);
+        } else {
+            System.out.println("No se ha encontrado ningun libro con ese titulo.");
+        }
+    }
+
+    public static void caso6(Scanner sc, LibroRepository<ModeloLibro> repo) {
+        System.out.print("Id: ");
+        String id = sc.nextLine();
+        System.out.print("Titulo: ");
+        String titulo = sc.nextLine();
+        System.out.print("Autor: ");
+        String autor = sc.nextLine();
+        System.out.print("Precio: ");
+        double precio = sc.nextDouble();
+        sc.nextLine();
+        System.out.print("Stock: ");
+        int stock = sc.nextInt();
+        sc.nextLine();
+        
+        ModeloLibro libro = new ModeloLibro(id, titulo, autor, precio, stock);
+        if (repo.insertar(libro)) {
+            System.out.println("Libro insertado correctamente.");
+        } else {
+            System.out.println("No se ha podido insertar el libro.");
+        }
+    }
+
+    public static void caso5(Scanner sc, LibroRepository<ModeloLibro> repo) {
+        System.out.print("Stock minimo: ");
+        int stock = sc.nextInt();
+        sc.nextLine();
+        
+        List<ModeloLibro> libros = repo.buscarPorCantidadStock(stock);
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros con ese stock o mas.");
+        } else {
+            for (ModeloLibro libro : libros) {
+                System.out.println(libro);
+            }
+        }
+    }
+
+    public static void caso4(Scanner sc, LibroRepository<ModeloLibro> repo) {
+        System.out.print("Precio minimo: ");
+        double precioMin = sc.nextDouble();
+        sc.nextLine();
+        System.out.print("Precio maximo: ");
+        double precioMax = sc.nextDouble();
+        sc.nextLine();
+        
+        if (precioMin > precioMax) {
+            double aux = precioMin;
+            precioMin = precioMax;
+            precioMax = aux;
+        }
+        
+        List<ModeloLibro> libros = repo.buscarPorRango(precioMin, precioMax);
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros.");
+        } else {
+            for (int i = 0; i < libros.size(); i++) {
+                System.out.println(libros.get(i));
+            }
+        }
+    }
+
+    public static void caso3(Scanner sc, LibroRepository<ModeloLibro> repo) {
+        System.out.print("Introduce el autor: ");
+        String autor = sc.nextLine();
+        
+        List<ModeloLibro> libros = repo.buscarPorAutor(autor);
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros de ese autor.");
+        } else {
+            for (ModeloLibro libro : libros) {
+                System.out.println(libro);
+            }
+        }
+    }
+
+    public static void caso2(Scanner sc, LibroRepository<ModeloLibro> repo) {
+        System.out.print("Introduce el titulo: ");
+        String titulo = sc.nextLine();
+        
+        ModeloLibro libro = repo.obtenerPorTitulo(titulo);
+        if (libro != null) {
+            System.out.println(libro);
+        } else {
+            System.out.println("No se ha encontrado ningun libro con ese titulo.");
+        }
+    }
+
+    public static void caso1(LibroRepository<ModeloLibro> repo) {
+        List<ModeloLibro> libros = repo.mostrarLibros();
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros.");
+        } else {
+            for (ModeloLibro libro : libros) {
+                System.out.println(libro);
+            }
+        }
     }
 }
