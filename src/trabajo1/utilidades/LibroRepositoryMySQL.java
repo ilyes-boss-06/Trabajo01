@@ -4,6 +4,8 @@
  */
 package trabajo1.utilidades;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -190,8 +192,56 @@ public boolean eliminarPorId(String id) {
 
     @Override
     public void CopiarArchivos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<ModeloLibro> libros = new ArrayList<>();
+
+        // 1. Se leen los libros del archivo. Si falla, se sale sin tocar la base de datos
+        try (BufferedReader br = new BufferedReader(new FileReader("libros.txt"))) {
+            String linea = br.readLine();
+            while (linea != null) {
+                if (!linea.trim().equals("")) {
+                    String[] campos = linea.split("\\^");
+                    ModeloLibro libro = new ModeloLibro();
+                    libro.setId(campos[0]);
+                    libro.setTitulo(campos[1]);
+                    libro.setAutor(campos[2]);
+                    libro.setPrecio(Double.parseDouble(campos[3]));
+                    libro.setStock(Integer.parseInt(campos[4]));
+                    libros.add(libro);
+                }
+                linea = br.readLine();
+            }
+        } catch (Exception e) {
+            System.out.println("Error al leer el archivo, no se ha modificado la base de datos: " + e);
+            return;
+        }
+
+        // 2. Se vacia la tabla y se insertan los libros leidos
+        if (guardarLibros(libros)) {
+            System.out.println("Se han copiado " + libros.size() + " libros del archivo a MySQL.");
+        }
     }
+    
+    public boolean guardarLibros(List<ModeloLibro> libros) {
+        // 1. Se vacia la tabla
+        String sql = "delete from libros";
+
+        try (Connection conn = ConexionesDB.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            return false;
+        }
+
+        // 2. Se insertan los libros uno a uno
+        for (int i = 0; i < libros.size(); i++) {
+            insertar(libros.get(i));
+        }
+        return true;
+    }
+
 
     @Override
     public List<ModeloLibro> buscarPorAutor(String autor) {
