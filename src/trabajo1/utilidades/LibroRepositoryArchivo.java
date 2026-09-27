@@ -20,16 +20,15 @@ import java.util.List;
  */
 public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
-    private static final String ARCHIVO = "libros.txt";
-    private static final String SEPARADOR = ";";
+    private static final String archivo = "libros.txt";
+    private static final String separador = "^";
 
     @Override
     public List<ModeloLibro> mostrarLibros() {
         List<ModeloLibro> libros = new ArrayList<>();
-        BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new FileReader(ARCHIVO));
+            BufferedReader br = new BufferedReader(new FileReader(archivo));
             String linea = br.readLine();
             while (linea != null) {
                 if (!linea.trim().equals("")) {
@@ -37,16 +36,9 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
                 }
                 linea = br.readLine();
             }
-        } catch (IOException e) {
-            System.err.println("Error al leer el archivo de libros: " + e.getMessage());
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                System.err.println("Error al cerrar el archivo de libros: " + e.getMessage());
-            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
         }
         return libros;
     }
@@ -65,8 +57,17 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
     }
 
     @Override
-    public ModeloLibro buscarPorRango(int rango) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<ModeloLibro> buscarPorRango(double precioMin, double precioMax) {
+        List<ModeloLibro> libros = mostrarLibros();
+        List<ModeloLibro> resultado = new ArrayList<>();
+
+        for (int i = 0; i < libros.size(); i++) {
+            ModeloLibro libro = libros.get(i);
+            if (libro.getPrecio() >= precioMin && libro.getPrecio() <= precioMax) {
+                resultado.add(libro);
+            }
+        }
+        return resultado;
     }
 
     @Override
@@ -95,18 +96,18 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         BufferedWriter bw = null;
 
         try {
-            bw = new BufferedWriter(new FileWriter(ARCHIVO));
+            bw = new BufferedWriter(new FileWriter(archivo));
             for (int i = 0; i < libros.size(); i++) {
                 ModeloLibro libro = libros.get(i);
-                String linea = libro.getId() + SEPARADOR
-                        + libro.getTitulo() + SEPARADOR
-                        + libro.getAutor() + SEPARADOR
-                        + libro.getPrecio() + SEPARADOR
+                String linea = libro.getId() + separador
+                        + libro.getTitulo() + separador
+                        + libro.getAutor() + separador
+                        + libro.getPrecio() + separador
                         + libro.getStock();
                 bw.write(linea);
                 bw.newLine();
             }
-            System.out.println("Se han copiado " + libros.size() + " libros a " + ARCHIVO);
+            System.out.println("Se han copiado " + libros.size() + " libros a " + archivo);
         } catch (IOException e) {
             System.err.println("Error al escribir el archivo de libros: " + e.getMessage());
         } finally {
@@ -120,8 +121,9 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         }
     }
 
-    private ModeloLibro mapearLinea(String linea) {
-        String[] campos = linea.split(SEPARADOR);
+     private ModeloLibro mapearLinea(String linea) {
+
+        String[] campos = linea.split("\\" + separador);
         ModeloLibro libro = new ModeloLibro();
         libro.setId(campos[0]);
         libro.setTitulo(campos[1]);
