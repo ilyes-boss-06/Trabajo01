@@ -72,9 +72,26 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
 
 	}
     @Override
-    public boolean insertar(ModeloLibro objeto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean insertar(ModeloLibro libro) {
+        String sql = "insert into libros (id, titulo, autor, precio, stock) values (?, ?, ?, ?, ?)";
+
+        try (Connection conn = ConexionesDB.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, libro.getId());
+            pstmt.setString(2, libro.getTitulo());
+            pstmt.setString(3, libro.getAutor());
+            pstmt.setDouble(4, libro.getPrecio());
+            pstmt.setInt(5, libro.getStock());
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return false;
     }
+
 
     @Override
     public ModeloLibro eliminarPorTitulo(String titulo) {
