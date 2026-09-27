@@ -87,27 +87,50 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     }
 
     @Override
-    public ModeloLibro buscarPorRango(int rango) {
-         String sql = "select * from libros where precio > ?";
+    public List<ModeloLibro> buscarPorAutor(String autor) {
+        List<ModeloLibro> libros = new ArrayList<>();
+        String sql = "select * from libros where autor = ?";
 
 		try (Connection conn = ConexionesDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			pstmt.setInt(1, rango);
+			pstmt.setString(1, autor);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					return mapearFila(rs);
+				while (rs.next()) {
+					libros.add(mapearFila(rs));
 				}
 			}
 
 		} catch (SQLException e) {
-			System.err.println("Error SQL al buscar libros con precio mayor a " + rango + "€ " + e.getMessage());
+			System.err.println("Error SQL al buscar libros de " + autor + ": " + e.getMessage());
 		}
-		return null; // no encontrado
+		return libros;
     }
 
     @Override
-    public ModeloLibro buscarPorCantidadStock(int stock) {
+    public List<ModeloLibro> buscarPorRango(double precioMin, double precioMax) {
+        List<ModeloLibro> libros = new ArrayList<>();
+        String sql = "select * from libros where precio between ? and ?";
+
+		try (Connection conn = ConexionesDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setDouble(1, precioMin);
+			pstmt.setDouble(2, precioMax);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					libros.add(mapearFila(rs));
+				}
+			}
+
+		} catch (SQLException e) {
+			System.err.println("Error SQL al buscar libros entre " + precioMin + "€ y " + precioMax + "€: " + e.getMessage());
+		}
+		return libros;
+    }
+
+    @Override
+    public List<ModeloLibro> buscarPorCantidadStock(int stock) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

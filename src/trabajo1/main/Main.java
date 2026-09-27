@@ -4,6 +4,7 @@
  */
 package trabajo1.main;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import trabajo1.utilidades.LibroRepository;
@@ -16,82 +17,168 @@ import trabajo1.utilidades.ModeloLibro;
  * @author BOSS
  */
 public class Main {
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        LibroRepositoryMySQL libroRepo = new LibroRepositoryMySQL();
-        LibroRepositoryArchivo libroArchivo = new LibroRepositoryArchivo();
-        
-        
-        
-        System.out.println("""
-                                     **MENU** 
-                           1. Mostrar todos los libros 
-                           2. Buscar libro por titulo 
-                           3. Buscar libro por autor 
-                           4. Buscar libro por rango de precio 
-                           5. Buscar libro por cantidad de stock 
-                           6. Insertar libro 
-                           7. Eliminar libro por titulo 
-                           8. Hacer copia de los datos del repositorio 
-                           0. Salir"""); 
-        
-         Scanner sc;
+
+        Scanner sc;
         sc = new Scanner(System.in).useLocale(Locale.US);
-        
-        switch (sc.nextInt()) {
-            case 1 -> { 
-                for (ModeloLibro libro : libroRepo.mostrarLibros()) {
-                    System.out.println(libro);
-                   }
-            }
-            case 2 -> {
-                sc.nextLine();
-                System.out.print("Introduce el titulo: ");
-                String titulo = sc.nextLine();
 
-                ModeloLibro libroBD = libroRepo.obtenerPorTitulo(titulo);
-                if (libroBD != null) {
-                    System.out.println("En la base de datos: " + libroBD);
-                } else {
-                    System.out.println("No se ha encontrado en la base de datos.");
-                }
+        LibroRepository<ModeloLibro> repo;
 
-                ModeloLibro libroTxt = libroArchivo.obtenerPorTitulo(titulo);
-                if (libroTxt != null) {
-                    System.out.println("En el archivo: " + libroTxt);
-                } else {
-                    System.out.println("No se ha encontrado en el archivo.");
-                }
-            }
-            case 3 -> {
-                
-            }
-            case 4 -> {
-                
-            }
-            case 5 -> {
-                
-            }
-            case 6 -> {
-                
-            }
-            case 7 -> {
-                
-            }
-            case 8 -> {
-                libroArchivo.CopiarArchivos();
-            }
-            case 0 -> {
-                
-            }
-            default -> throw new AssertionError();
+        System.out.println("""
+                           Con que repositorio quieres trabajar?
+                           1. Base de datos MySQL
+                           2. Archivo de texto""");
+        System.out.print("Opcion: ");
+        int tipo = sc.nextInt();
+        sc.nextLine();
+
+        if (tipo == 1) {
+            repo = new LibroRepositoryMySQL();
+            System.out.println("Usando la base de datos MySQL.");
+        } else if (tipo == 2) {
+            repo = new LibroRepositoryArchivo();
+            System.out.println("Usando el archivo de texto.");
+        } else {
+            System.out.println("Opcion no valida.");
+            sc.close();
+            return;
         }
-        
-        
-   sc.close();
+
+        int opcion;
+        do {
+            System.out.println("""
+                                         **MENU**
+                               1. Mostrar todos los libros
+                               2. Buscar libro por titulo
+                               3. Buscar libro por autor
+                               4. Buscar libro por rango de precio
+                               5. Buscar libro por cantidad de stock
+                               6. Insertar libro
+                               7. Eliminar libro por titulo
+                               8. Hacer copia de los datos del repositorio
+                               0. Salir""");
+            System.out.print("Opcion: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1 -> {
+                    List<ModeloLibro> libros = repo.mostrarLibros();
+                    if (libros.isEmpty()) {
+                        System.out.println("No hay libros.");
+                    } else {
+                        for (ModeloLibro libro : libros) {
+                            System.out.println(libro);
+                        }
+                    }
+                }
+                case 2 -> {
+                    System.out.print("Introduce el titulo: ");
+                    String titulo = sc.nextLine();
+
+                    ModeloLibro libro = repo.obtenerPorTitulo(titulo);
+                    if (libro != null) {
+                        System.out.println(libro);
+                    } else {
+                        System.out.println("No se ha encontrado ningun libro con ese titulo.");
+                    }
+                }
+                case 3 -> {
+                    System.out.print("Introduce el autor: ");
+                    String autor = sc.nextLine();
+
+                    List<ModeloLibro> libros = repo.buscarPorAutor(autor);
+                    if (libros.isEmpty()) {
+                        System.out.println("No hay libros de ese autor.");
+                    } else {
+                        for (ModeloLibro libro : libros) {
+                            System.out.println(libro);
+                        }
+                    }
+                }
+                case 4 -> {
+                    System.out.print("Precio minimo: ");
+                    double precioMin = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.print("Precio maximo: ");
+                    double precioMax = sc.nextDouble();
+                    sc.nextLine();
+
+                    if (precioMin > precioMax) {
+                        double aux = precioMin;
+                        precioMin = precioMax;
+                        precioMax = aux;
+                    }
+
+                    List<ModeloLibro> libros = repo.buscarPorRango(precioMin, precioMax);
+                    if (libros.isEmpty()) {
+                        System.out.println("No hay libros.");
+                    } else {
+                        for (int i = 0; i < libros.size(); i++) {
+                            System.out.println(libros.get(i));
+                        }
+                    }
+                }
+                case 5 -> {
+                    System.out.print("Stock minimo: ");
+                    int stock = sc.nextInt();
+                    sc.nextLine();
+
+                    List<ModeloLibro> libros = repo.buscarPorCantidadStock(stock);
+                    if (libros.isEmpty()) {
+                        System.out.println("No hay libros con ese stock o mas.");
+                    } else {
+                        for (ModeloLibro libro : libros) {
+                            System.out.println(libro);
+                        }
+                    }
+                }
+                case 6 -> {
+                    System.out.print("Id: ");
+                    String id = sc.nextLine();
+                    System.out.print("Titulo: ");
+                    String titulo = sc.nextLine();
+                    System.out.print("Autor: ");
+                    String autor = sc.nextLine();
+                    System.out.print("Precio: ");
+                    double precio = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.print("Stock: ");
+                    int stock = sc.nextInt();
+                    sc.nextLine();
+
+                    ModeloLibro libro = new ModeloLibro(id, titulo, autor, precio, stock);
+                    if (repo.insertar(libro)) {
+                        System.out.println("Libro insertado correctamente.");
+                    } else {
+                        System.out.println("No se ha podido insertar el libro.");
+                    }
+                }
+                case 7 -> {
+                    System.out.print("Titulo del libro a eliminar: ");
+                    String titulo = sc.nextLine();
+
+                    ModeloLibro eliminado = repo.eliminarPorTitulo(titulo);
+                    if (eliminado != null) {
+                        System.out.println("Libro eliminado: " + eliminado);
+                    } else {
+                        System.out.println("No se ha encontrado ningun libro con ese titulo.");
+                    }
+                }
+                case 8 -> {
+                    repo.CopiarArchivos();
+                }
+                case 0 -> {
+                    System.out.println("Saliendo...");
+                }
+                default -> System.out.println("Opcion no valida.");
+            }
+        } while (opcion != 0);
+
+        sc.close();
     }
 }

@@ -14,8 +14,9 @@ import java.util.List;
 public interface LibroRepository<T> {
     List<T> mostrarLibros();
     T obtenerPorTitulo(String titulo);
+    List<T> buscarPorAutor(String autor);
     List<T> buscarPorRango(double precioMin, double precioMax);
-    T buscarPorCantidadStock(int stock);
+    List<T> buscarPorCantidadStock(int stock);
     boolean insertar(T objeto);
     T eliminarPorTitulo(String titulo);
     public void CopiarArchivos();

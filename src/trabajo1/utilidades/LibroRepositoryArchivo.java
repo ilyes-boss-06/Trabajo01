@@ -55,7 +55,21 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         }
         return null;
     }
+    
+    @Override
+    public List<ModeloLibro> buscarPorAutor(String autor) {
+        List<ModeloLibro> libros = mostrarLibros();
+        List<ModeloLibro> resultado = new ArrayList<>();
 
+        for (int i = 0; i < libros.size(); i++) {
+            ModeloLibro libro = libros.get(i);
+            if (libro.getAutor().equalsIgnoreCase(autor)) {
+                resultado.add(libro);
+            }
+        }
+        return resultado;
+    }
+    
     @Override
     public List<ModeloLibro> buscarPorRango(double precioMin, double precioMax) {
         List<ModeloLibro> libros = mostrarLibros();
@@ -71,7 +85,7 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
     }
 
     @Override
-    public ModeloLibro buscarPorCantidadStock(int stock) {
+    public List<ModeloLibro> buscarPorCantidadStock(int stockMinimo) {
         List<ModeloLibro> libros = mostrarLibros();
         List<ModeloLibro> resultado = new ArrayList<>();
 
@@ -85,7 +99,7 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
     }
 
     @Override
-    public boolean insertar(ModeloLibro objeto) {
+    public boolean insertar(ModeloLibro libro) {
         List<ModeloLibro> libros = mostrarLibros();
         for (int i = 0; i < libros.size(); i++) {
             if (libros.get(i).getId().equals(libro.getId())) {
@@ -112,11 +126,14 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
         for (int i = 0; i < libros.size(); i++) {
             if (libros.get(i).getTitulo().equals(titulo)) {
-                libros.remove(i);
-                return guardarLibros(libros);
+                ModeloLibro eliminado = libros.remove(i);
+                if (guardarLibros(libros)) {
+                    return eliminado;
+                }
+                return null;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -153,6 +170,32 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
                 System.err.println("Error al cerrar el archivo de libros: " + e.getMessage());
             }
         }
+    }
+
+    /**
+     * Sobrescribe el archivo con la lista de libros recibida.
+     */
+    private boolean guardarLibros(List<ModeloLibro> libros) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(archivo));
+            for (int i = 0; i < libros.size(); i++) {
+                bw.write(libroALinea(libros.get(i)));
+                bw.newLine();
+            }
+            bw.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            return false;
+        }
+    }
+
+    private String libroALinea(ModeloLibro libro) {
+        return libro.getId() + separador
+                + libro.getTitulo() + separador
+                + libro.getAutor() + separador
+                + libro.getPrecio() + separador
+                + libro.getStock();
     }
 
      private ModeloLibro mapearLinea(String linea) {
