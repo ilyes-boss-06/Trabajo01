@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import trabajo1.conectores.ConexionesDB;
 /**
@@ -93,10 +94,99 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     }
 
 
-    @Override
-    public ModeloLibro eliminarPorTitulo(String titulo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+ 
+@Override
+public ModeloLibro eliminarPorTitulo(String titulo) {
+
+    String sqlBuscar = "select * from libros where titulo = ?";
+    String sqlEliminar = "delete from libros where id = ?";
+
+    try (Connection conn = ConexionesDB.getConnection();
+         PreparedStatement pstmtBuscar = conn.prepareStatement(sqlBuscar)) {
+
+        pstmtBuscar.setString(1, titulo);
+
+        try (ResultSet rs = pstmtBuscar.executeQuery()) {
+
+            List<ModeloLibro> librosEncontrados = new ArrayList<>();
+
+            while (rs.next()) {
+                librosEncontrados.add(mapearFila(rs));
+            }
+
+            
+            if (librosEncontrados.isEmpty()) {
+                System.out.println("No existe ningún libro con el título: " + titulo);
+                return null;
+            }
+
+            
+            if (librosEncontrados.size() == 1) {
+
+                ModeloLibro libro = librosEncontrados.get(0);
+
+                try (PreparedStatement pstmtEliminar = conn.prepareStatement(sqlEliminar)) {
+
+                    pstmtEliminar.setString(1, libro.getId());
+
+                    if (pstmtEliminar.executeUpdate() > 0) {
+                        System.out.println("Libro eliminado correctamente.");
+                        return libro;
+                    }
+                }
+            }
+
+            
+            System.out.println("Hay varios libros con el título: " + titulo);
+            System.out.println("Selecciona el libro que quieres eliminar:");
+
+            for (ModeloLibro libro : librosEncontrados) {
+                System.out.println(
+                    "ID: " + libro.getId()
+                    + " | Título: " + libro.getTitulo()
+                    + " | Autor: " + libro.getAutor()
+                    + " | Precio: " + libro.getPrecio()
+                    + " | Stock: " + libro.getStock()
+                );
+            }
+
+            Scanner sc = new Scanner(System.in);
+
+            System.out.print("Introduce el ID del libro que quieres eliminar: ");
+            String id = sc.nextLine();
+
+            if (eliminarPorId(id)) {
+                System.out.println("Libro eliminado correctamente.");
+            } else {
+                System.out.println("No se ha podido eliminar el libro.");
+            }
+
+            return null;
+        }
+        
+    } catch (Exception e) {
+        System.out.println("Error al eliminar el libro: " + e.getMessage());
     }
+
+    return null;
+}
+
+
+public boolean eliminarPorId(String id) {
+        String sql = "delete from libros where id = ?";
+
+        try (Connection conn = ConexionesDB.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, id);
+            return pstmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return false;
+    }
+
 
     @Override
     public void CopiarArchivos() {
