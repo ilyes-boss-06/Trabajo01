@@ -72,12 +72,38 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
     @Override
     public ModeloLibro buscarPorCantidadStock(int stock) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<ModeloLibro> libros = mostrarLibros();
+        List<ModeloLibro> resultado = new ArrayList<>();
+
+        for (int i = 0; i < libros.size(); i++) {
+            ModeloLibro libro = libros.get(i);
+            if (libro.getStock() >= stockMinimo) {
+                resultado.add(libro);
+            }
+        }
+        return resultado;
     }
 
     @Override
     public boolean insertar(ModeloLibro objeto) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<ModeloLibro> libros = mostrarLibros();
+        for (int i = 0; i < libros.size(); i++) {
+            if (libros.get(i).getId().equals(libro.getId())) {
+                System.out.println("Ya existe un libro con el id " + libro.getId());
+                return false;
+            }
+        }
+
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(archivo, true));
+            bw.write(libroALinea(libro));
+            bw.newLine();
+            bw.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            return false;
+        }
     }
 
     @Override
