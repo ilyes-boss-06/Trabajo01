@@ -6,15 +6,22 @@ package trabajo1.utilidades;
 
 /**
  *
- * @author 2DAM
+ * @author Juan David
+ * Modelo principal de los libros que se podran añadir a la base de datos
  */
 public class ModeloLibro{
-String id;
+    /**
+     * Atributo de @see ModeloLibro
+     */
+    String id;
 String titulo;
 String autor;
 double precio;
 int stock;
-
+    
+    /**
+    * Contructor vacio de ModeloLibro
+    */
     public ModeloLibro() {
     }
 
