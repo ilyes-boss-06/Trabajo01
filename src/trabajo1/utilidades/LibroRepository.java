@@ -47,10 +47,35 @@ public interface LibroRepository<T> {
      */
     List<T> buscarPorRango(double precioMin, double precioMax);
     
-    
+    /**
+     * Busca los libros según la cantidad disponible en stock.
+     *
+     * @param stock cantidad de unidades en stock que se desea buscar.
+     * @return lista de libros que coinciden con la cantidad de stock indicada.
+     */
     List<T> buscarPorCantidadStock(int stock);
+    
+    /**
+     * Inserta un nuevo objeto en el repositorio.
+     *
+     * @param objeto objeto que se desea insertar.
+     * @return true si el objeto se ha insertado correctamente,
+     *         false en caso contrario.
+     */
     boolean insertar(T objeto);
+    
+    /**
+     * Elimina un libro del repositorio utilizando su título.
+     * Si el el titulo esta duplicado, pregunta por la id del libro.
+     *
+     * @param titulo título del libro que se desea eliminar.
+     * @return libro que ha sido eliminado.
+     */
     T eliminarPorTitulo(String titulo);
+    
+    /**
+     * Copia los archivos utilizados por el repositorio.
+     */
     public void CopiarArchivos();
     
 }
