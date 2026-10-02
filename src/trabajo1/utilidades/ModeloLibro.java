@@ -110,26 +110,57 @@ public class ModeloLibro{
         return stock;
     }
     
+    /**
+     * Modifica el identificador del libro.
+     *
+     * @param id nuevo identificador del libro
+     */
     public void setId(String id) {
         this.id = id;
     }
-
+    
+    /**
+     * Modifica el título del libro.
+     *
+     * @param titulo nuevo título del libro
+     */
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-
+    
+    /**
+     * Modifica el autor del libro.
+     *
+     * @param autor nuevo autor del libro
+     */
     public void setAutor(String autor) {
         this.autor = autor;
     }
-
+    
+    /**
+     * Modifica el precio del libro.
+     *
+     * @param precio nuevo precio del libro
+     */
     public void setPrecio(double precio) {
         this.precio = precio;
     }
-
+    
+    /**
+     * Modifica la cantidad de unidades disponibles.
+     *
+     * @param stock nueva cantidad de unidades disponibles
+     */
     public void setStock(int stock) {
         this.stock = stock;
     }
-
+    
+    /**
+     * Devuelve una representación en forma de texto del libro,
+     * mostrando todos sus atributos.
+     *
+     * @return cadena de texto con los datos del libro
+     */
     @Override
     public String toString() {
         return "ModeloLibro{" + "id=" + id + ", titulo=" + titulo + ", autor=" + autor + ", precio=" + precio + ", stock=" + stock + '}';
