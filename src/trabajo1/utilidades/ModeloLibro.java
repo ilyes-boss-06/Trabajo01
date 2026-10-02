@@ -5,19 +5,36 @@
 package trabajo1.utilidades;
 
 /**
+ * Clase que representa el modelo de un libro que se puede
+ * almacenar y gestionar en la base de datos.
  *
  * @author Juan David
- * Modelo principal de los libros que se podran añadir a la base de datos
  */
 public class ModeloLibro{
+    
     /**
-     * Atributo de @see ModeloLibro
+     * Identificador único del libro.
      */
     String id;
-String titulo;
-String autor;
-double precio;
-int stock;
+    
+    /**
+     * Título del libro.
+     */
+    String titulo;
+
+    /**
+     * Autor del libro.
+     */
+    String autor;
+
+    /**
+     * Precio del libro.
+     */
+    double precio;
+    /**
+     * Cantidad de unidades disponibles del libro.
+     */
+    int stock;
     
     /**
     * Contructor vacio de ModeloLibro
