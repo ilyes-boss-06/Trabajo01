@@ -37,13 +37,26 @@ public class ModeloLibro{
     int stock;
     
     /**
-    * Contructor vacio de ModeloLibro
-    */
+     * Constructor vacío de la clase ModeloLibro.
+     *
+     * Permite crear el objeto sin establecer sus atributos
+     * inicialmente.
+     */
     public ModeloLibro() {
     }
 
 
-
+    /**
+     * Constructor de la clase ModeloLibro.
+     *
+     * Permite crear un libro estableciendo todos sus atributos.
+     *
+     * @param id identificador del libro
+     * @param titulo título del libro
+     * @param autor autor del libro
+     * @param precio precio del libro
+     * @param stock cantidad de unidades disponibles
+     */
     public ModeloLibro(String id, String titulo, String autor, double precio, int stock) {
         this.id = id;
         this.titulo = titulo;
