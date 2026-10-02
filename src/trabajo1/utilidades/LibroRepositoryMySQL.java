@@ -16,12 +16,23 @@ import java.util.List;
 import java.util.Scanner;
 
 import trabajo1.conectores.ConexionesDB;
+
 /**
+ * Implementación del repositorio de libros utilizando una base de datos MySQL.
+ * 
+ * Esta clase permite realizar operaciones de consulta, inserción y eliminación
+ * de libros en la tabla "libros", además de copiar información desde un archivo
+ * de texto hacia la base de datos.
  *
- * @author 2DAM
+ * @author Juan David
  */
 public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
-
+    
+    /**
+     * Obtiene todos los libros almacenados en la base de datos.
+     *
+     * @return lista con todos los libros encontrados en la tabla "libros".
+     */
     @Override
     public List<ModeloLibro> mostrarLibros() {
         List<ModeloLibro> Libros = new ArrayList<>();
@@ -41,7 +52,13 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
 			}
 			return Libros;
     }
-
+    
+    /**
+     * Busca un libro en la base de datos mediante su título.
+     *
+     * @param titulo título del libro que se desea buscar.
+     * @return libro encontrado o null si no existe ningún libro con ese título.
+     */
     @Override
     public ModeloLibro obtenerPorTitulo(String titulo) {
         String sql = "select * from libros where titulo = ?";
