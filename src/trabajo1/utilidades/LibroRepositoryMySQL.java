@@ -80,7 +80,13 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     }
 
     
-    
+    /**
+     * Convierte una fila obtenida de la base de datos en un objeto ModeloLibro.
+     *
+     * @param rs resultado de la consulta SQL que contiene los datos del libro.
+     * @return objeto ModeloLibro creado a partir de los datos de la fila.
+     * @throws SQLException si se produce un error al obtener los datos del resultado.
+     */
     private ModeloLibro mapearFila(ResultSet rs) throws SQLException {
 		ModeloLibro libro = new ModeloLibro();
 		libro.setId(rs.getString("id"));
@@ -90,7 +96,13 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
 		libro.setStock(rs.getInt("stock"));
 		return libro;
 
-	}
+    /**
+     * Inserta un nuevo libro en la base de datos.
+     *
+     * @param libro libro que se desea insertar.
+     * @return true si el libro se ha insertado correctamente,
+     *         false si se produce algún error.
+     */	}
     @Override
     public boolean insertar(ModeloLibro libro) {
         String sql = "insert into libros (id, titulo, autor, precio, stock) values (?, ?, ?, ?, ?)";
