@@ -125,7 +125,16 @@ public class LibroRepositoryMySQL implements LibroRepository<ModeloLibro>{
     }
 
 
- 
+/**
+     * Elimina un libro utilizando su título.
+     *
+     * Si existe más de un libro con el mismo título, muestra los libros
+     * encontrados y solicita al usuario el ID del libro que desea eliminar.
+     *
+     * @param titulo título del libro que se desea eliminar.
+     * @return libro eliminado si solamente existe uno con ese título;
+     *         null si no existe o si se selecciona mediante ID.
+     */
 @Override
 public ModeloLibro eliminarPorTitulo(String titulo) {
 
@@ -202,7 +211,13 @@ public ModeloLibro eliminarPorTitulo(String titulo) {
     return null;
 }
 
-
+/**
+     * Elimina un libro de la base de datos utilizando su ID.
+     *
+     * @param id identificador del libro que se desea eliminar.
+     * @return true si el libro se ha eliminado correctamente,
+     *         false si no se ha podido eliminar.
+     */
 public boolean eliminarPorId(String id) {
         String sql = "delete from libros where id = ?";
 
@@ -218,7 +233,13 @@ public boolean eliminarPorId(String id) {
         return false;
     }
 
-
+    /**
+     * Lee los libros almacenados en el archivo "libros.txt" y los copia
+     * a la base de datos MySQL.
+     *
+     * El archivo debe contener los datos de cada libro separados mediante
+     * el carácter "^".
+     */
     @Override
     public void CopiarArchivos() {
         List<ModeloLibro> libros = new ArrayList<>();
@@ -271,7 +292,12 @@ public boolean eliminarPorId(String id) {
         return true;
     }
 
-
+    /**
+     * Busca todos los libros escritos por un determinado autor.
+     *
+     * @param autor nombre del autor que se desea buscar.
+     * @return lista de libros pertenecientes al autor indicado.
+     */
     @Override
     public List<ModeloLibro> buscarPorAutor(String autor) {
         List<ModeloLibro> libros = new ArrayList<>();
@@ -292,7 +318,13 @@ public boolean eliminarPorId(String id) {
 		}
 		return libros;
     }
-
+     /**
+     * Busca los libros cuyo precio se encuentra dentro de un rango determinado.
+     *
+     * @param precioMin precio mínimo del rango de búsqueda.
+     * @param precioMax precio máximo del rango de búsqueda.
+     * @return lista de libros cuyo precio está entre el mínimo y el máximo indicados.
+     */
     @Override
     public List<ModeloLibro> buscarPorRango(double precioMin, double precioMax) {
         List<ModeloLibro> libros = new ArrayList<>();
@@ -314,7 +346,13 @@ public boolean eliminarPorId(String id) {
 		}
 		return libros;
     }
-
+    /**
+     * Busca los libros que tienen una cantidad de stock igual o superior
+     * al valor indicado.
+     *
+     * @param stockMinimo cantidad mínima de stock que debe tener el libro.
+     * @return lista de libros que cumplen con la cantidad mínima de stock.
+     */
     @Override
     public List<ModeloLibro> buscarPorCantidadStock(int stockMinimo) {
         List<ModeloLibro> libros = new ArrayList<>();
