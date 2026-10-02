@@ -64,27 +64,52 @@ public class ModeloLibro{
         this.precio = precio;
         this.stock = stock;
     }
-
+    
+    /**
+     * Obtiene el identificador del libro.
+     *
+     * @return identificador del libro
+     */
     public String getId() {
         return id;
     }
-
+    
+    /**
+     * Obtiene el título del libro.
+     *
+     * @return título del libro
+     */
     public String getTitulo() {
         return titulo;
     }
-
+    
+    /**
+     * Obtiene el autor del libro.
+     *
+     * @return autor del libro
+     */
     public String getAutor() {
         return autor;
     }
-
+    
+    /**
+     * Obtiene el precio del libro.
+     *
+     * @return precio del libro
+     */
     public double getPrecio() {
         return precio;
     }
-
+    
+    /**
+     * Obtiene la cantidad de unidades disponibles.
+     *
+     * @return cantidad de unidades disponibles
+     */
     public int getStock() {
         return stock;
     }
-
+    
     public void setId(String id) {
         this.id = id;
     }
