@@ -10,16 +10,39 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- *
- * @author BOSS
+ * Se encarga de abrir conexiones con la base de datos MySQL.
+ * Las credenciales no estan en el codigo: se leen de un fichero .env
+ * mediante la libreria dotenv-java.
+ * 
+ * @author Ilyes Ben Jaber
  */
 public class ConexionesDB {
+    
+        /** 
+         * Fichero .env cargado una unica vez.
+         */
 	private static final Dotenv dotenv = Dotenv.load();
 
+        /** 
+         * URL JDBC de la base de datos (clave db.url del .env). 
+         */
 	private static final String URL = dotenv.get("db.url");
+        
+        /** 
+         * Usuario de la base de datos (clave db.user del .env). 
+         */
 	private static final String USER = dotenv.get("db.user");
+        
+        /**
+         * Contrasena de la base de datos (clave db.password del .env). 
+         */
 	private static final String PASS = dotenv.get("db.password");
 
+        /**
+         * Abre una conexion nueva con la base de datos.
+         * 
+         * @return 
+         */
 	public static Connection getConnection() {
 		Connection con = null; 
 		try {

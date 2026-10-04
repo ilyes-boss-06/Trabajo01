@@ -12,28 +12,39 @@ import trabajo1.utilidades.LibroRepositoryArchivo;
 import trabajo1.utilidades.LibroRepositoryMySQL;
 import trabajo1.utilidades.ModeloLibro;
 
-/**
- *
- * @author BOSS
+/** 
+ * @author Ilyes Ben Jaber
+ * 
+ * Clase principal de la aplicacion de gestion de libros.
+ * Muestra los menus por consola y delega el trabajo en el repositorio
+ * elegido por el usuario (base de datos MySQL o archivo de texto).
  */
 public class Main {
 
     /**
+     * Metodo de entrada del programa. Pregunta con que repositorio se quiere
+     * trabajar y muestra el menu principal en bucle hasta que se elige salir.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
+        // Abrimos un Scanner y lo llamamos sc.
         Scanner sc;
         sc = new Scanner(System.in).useLocale(Locale.US);
 
+        // Tipo interfaz: puede contener cualquiera de los dos repositorios (patron repository)
+        
         LibroRepository<ModeloLibro> repo;
 
+        // Menu para seleccionar repositorio con el que se desea trabajar.
+        
         System.out.println("""
                            Con que repositorio quieres trabajar?
                            1. Base de datos MySQL
                            2. Archivo de texto""");
         System.out.print("Opcion: ");
         int tipo = sc.nextInt();
+        // limpia el salto de linea que deja nextInt()
         sc.nextLine();
 
         if (tipo == 1) {
@@ -47,7 +58,7 @@ public class Main {
             sc.close();
             return;
         }
-
+        // Abrimos el menu de Trabajo, si el usuario pone 0 sale.
         int opcion;
         do {
             System.out.println("""
@@ -64,7 +75,7 @@ public class Main {
             System.out.print("Opcion: ");
             opcion = sc.nextInt();
             sc.nextLine();
-
+            // Refactorice el codigo, todos los casos estan abajo.
             switch (opcion) {
                 case 1 -> {
                     caso1(repo);
@@ -90,20 +101,34 @@ public class Main {
                 case 8 -> {
                     caso8(repo);
                 }
+                // Con el 0 sales del bucle.
                 case 0 -> {
                     System.out.println("Saliendo...");
                 }
+                // Default, significa que no es ninguna de las opciones que le ofrezco.
                 default -> System.out.println("Opcion no valida.");
             }
         } while (opcion != 0);
 
         sc.close();
     }
-
+    /**
+     * Opcion 8: hace una copia de los datos. El sentido depende del
+     * repositorio: el de archivo copia desde MySQL al archivo y el de
+     * MySQL copia desde el archivo a la base de datos.
+     *
+     * @param repo 
+     */
     public static void caso8(LibroRepository<ModeloLibro> repo) {
         repo.CopiarArchivos();
     }
 
+    /**
+     * Opcion 7: pide un titulo y elimina el libro correspondiente.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso7(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Titulo del libro a eliminar: ");
         String titulo = sc.nextLine();
@@ -116,6 +141,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 6: pide todos los datos de un libro nuevo y lo inserta.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso6(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Id: ");
         String id = sc.nextLine();
@@ -138,6 +169,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 5: muestra los libros con stock igual o superior al indicado.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso5(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Stock minimo: ");
         int stock = sc.nextInt();
@@ -153,6 +190,13 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 4: muestra los libros cuyo precio esta dentro de un rango.
+     * Si el usuario introduce el minimo mayor que el maximo, se intercambian.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso4(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Precio minimo: ");
         double precioMin = sc.nextDouble();
@@ -177,6 +221,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 3: muestra todos los libros de un autor.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso3(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Introduce el autor: ");
         String autor = sc.nextLine();
@@ -191,6 +241,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 2: busca un unico libro por su titulo y lo muestra.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso2(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Introduce el titulo: ");
         String titulo = sc.nextLine();
@@ -203,6 +259,11 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 1: muestra todos los libros del repositorio.
+     * 
+     * @param repo 
+     */
     public static void caso1(LibroRepository<ModeloLibro> repo) {
         List<ModeloLibro> libros = repo.mostrarLibros();
         if (libros.isEmpty()) {
