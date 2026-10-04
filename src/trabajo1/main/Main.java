@@ -44,6 +44,7 @@ public class Main {
                            2. Archivo de texto""");
         System.out.print("Opcion: ");
         int tipo = sc.nextInt();
+        // limpia el salto de linea que deja nextInt()
         sc.nextLine();
 
         if (tipo == 1) {
@@ -57,7 +58,7 @@ public class Main {
             sc.close();
             return;
         }
-
+        // Abrimos el menu de Trabajo, si el usuario pone 0 sale.
         int opcion;
         do {
             System.out.println("""
@@ -74,7 +75,7 @@ public class Main {
             System.out.print("Opcion: ");
             opcion = sc.nextInt();
             sc.nextLine();
-
+            // Refactorice el codigo, todos los casos estan abajo.
             switch (opcion) {
                 case 1 -> {
                     caso1(repo);
@@ -100,16 +101,24 @@ public class Main {
                 case 8 -> {
                     caso8(repo);
                 }
+                // Con el 0 sales del bucle.
                 case 0 -> {
                     System.out.println("Saliendo...");
                 }
+                // Default, significa que no es ninguna de las opciones que le ofrezco.
                 default -> System.out.println("Opcion no valida.");
             }
         } while (opcion != 0);
 
         sc.close();
     }
-
+    /**
+     * Opcion 8: hace una copia de los datos. El sentido depende del
+     * repositorio: el de archivo copia desde MySQL al archivo y el de
+     * MySQL copia desde el archivo a la base de datos.
+     *
+     * @param repo 
+     */
     public static void caso8(LibroRepository<ModeloLibro> repo) {
         repo.CopiarArchivos();
     }
