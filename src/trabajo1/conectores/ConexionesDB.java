@@ -41,7 +41,7 @@ public class ConexionesDB {
         /**
          * Abre una conexion nueva con la base de datos.
          * 
-         * @return 
+         * @return la conexion abierta, o null si no se ha podido conectar
          */
 	public static Connection getConnection() {
 		Connection con = null; 
