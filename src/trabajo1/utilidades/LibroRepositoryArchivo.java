@@ -33,7 +33,7 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
     /**
      * Lee el archivo linea a linea ignorando las lineas vacias.
      *
-     * @return 
+     * @return lista con todos los libros del archivo
      */
     @Override
     public List<ModeloLibro> mostrarLibros() {
@@ -57,9 +57,9 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
     /**
      * Busca un libro por titulo sin distinguir mayusculas de minusculas.
-     * 
-     * @param titulo
-     * @return 
+     *
+     * @param titulo titulo a buscar
+     * @return el libro encontrado, o null si no existe
      */
     @Override
     public ModeloLibro obtenerPorTitulo(String titulo) {
@@ -74,6 +74,12 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         return null;
     }
     
+    /**
+     * Filtra los libros por autor sin distinguir mayusculas de minusculas.
+     *
+     * @param autor autor a buscar
+     * @return lista de libros del autor
+     */
     @Override
     public List<ModeloLibro> buscarPorAutor(String autor) {
         List<ModeloLibro> libros = mostrarLibros();
