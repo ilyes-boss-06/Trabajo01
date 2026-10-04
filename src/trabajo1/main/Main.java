@@ -12,9 +12,12 @@ import trabajo1.utilidades.LibroRepositoryArchivo;
 import trabajo1.utilidades.LibroRepositoryMySQL;
 import trabajo1.utilidades.ModeloLibro;
 
-/**
- *
- * @author BOSS
+/** 
+ * @author Ilyes Ben Jaber
+ * 
+ * Clase principal de la aplicacion de gestion de libros.
+ * Muestra los menus por consola y delega el trabajo en el repositorio
+ * elegido por el usuario (base de datos MySQL o archivo de texto).
  */
 public class Main {
 
@@ -22,7 +25,10 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
+        /**
+         * 
+         */
         Scanner sc;
         sc = new Scanner(System.in).useLocale(Locale.US);
 

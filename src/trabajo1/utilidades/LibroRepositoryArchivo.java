@@ -14,9 +14,9 @@ import java.util.List;
 
 /**
  * Repositorio de libros guardado en un archivo de texto.
- * Cada linea del archivo es un libro con el formato: id;titulo;autor;precio;stock
+ * Cada linea del archivo es un libro con el formato: id^titulo^autor^precio^stock
  *
- * @author BOSS
+ * @author Ilyes Ben Jaber
  */
 public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
