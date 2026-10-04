@@ -20,9 +20,21 @@ import java.util.List;
  */
 public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
+    /** 
+     * Nombre del archivo de datos (en la carpeta de ejecucion del programa). 
+     */
     private static final String archivo = "libros.txt";
+    
+    /** 
+     * Caracter que separa los campos de cada linea. 
+     */
     private static final String separador = "^";
 
+    /**
+     * Lee el archivo linea a linea ignorando las lineas vacias.
+     *
+     * @return 
+     */
     @Override
     public List<ModeloLibro> mostrarLibros() {
         List<ModeloLibro> libros = new ArrayList<>();
@@ -43,6 +55,12 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         return libros;
     }
 
+    /**
+     * Busca un libro por titulo sin distinguir mayusculas de minusculas.
+     * 
+     * @param titulo
+     * @return 
+     */
     @Override
     public ModeloLibro obtenerPorTitulo(String titulo) {
         List<ModeloLibro> libros = mostrarLibros();
