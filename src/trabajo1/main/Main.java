@@ -123,6 +123,12 @@ public class Main {
         repo.CopiarArchivos();
     }
 
+    /**
+     * Opcion 7: pide un titulo y elimina el libro correspondiente.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso7(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Titulo del libro a eliminar: ");
         String titulo = sc.nextLine();
@@ -135,6 +141,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 6: pide todos los datos de un libro nuevo y lo inserta.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso6(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Id: ");
         String id = sc.nextLine();
