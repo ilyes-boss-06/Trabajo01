@@ -164,6 +164,12 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         }
     }
 
+    /**
+     * Elimina el primer libro con ese titulo exacto y reescribe el archivo.
+     *
+     * @param titulo titulo del libro a eliminar
+     * @return el libro eliminado, o null si no existe o no se pudo guardar
+     */
     @Override
     public ModeloLibro eliminarPorTitulo(String titulo) {
         List<ModeloLibro> libros = mostrarLibros();
@@ -218,6 +224,9 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
 
     /**
      * Sobrescribe el archivo con la lista de libros recibida.
+     *
+     * @param libros libros que se guardaran en el archivo
+     * @return true si se ha guardado correctamente, false si ha fallado
      */
     private boolean guardarLibros(List<ModeloLibro> libros) {
         try {
@@ -234,6 +243,13 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         }
     }
 
+    /**
+     * Convierte un libro en una linea de texto con el formato
+     * id^titulo^autor^precio^stock.
+     *
+     * @param libro libro a convertir
+     * @return la linea de texto del libro
+     */
     private String libroALinea(ModeloLibro libro) {
         return libro.getId() + separador
                 + libro.getTitulo() + separador
@@ -242,6 +258,12 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
                 + libro.getStock();
     }
 
+    /**
+     * Convierte una linea de texto del archivo en un objeto ModeloLibro.
+     *
+     * @param linea linea con el formato id^titulo^autor^precio^stock
+     * @return el libro correspondiente a la linea
+     */
      private ModeloLibro mapearLinea(String linea) {
 
         String[] campos = linea.split("\\" + separador);
