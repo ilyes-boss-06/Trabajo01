@@ -169,6 +169,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 5: muestra los libros con stock igual o superior al indicado.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso5(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Stock minimo: ");
         int stock = sc.nextInt();
@@ -184,6 +190,13 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 4: muestra los libros cuyo precio esta dentro de un rango.
+     * Si el usuario introduce el minimo mayor que el maximo, se intercambian.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso4(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Precio minimo: ");
         double precioMin = sc.nextDouble();
