@@ -22,18 +22,22 @@ import trabajo1.utilidades.ModeloLibro;
 public class Main {
 
     /**
+     * Metodo de entrada del programa. Pregunta con que repositorio se quiere
+     * trabajar y muestra el menu principal en bucle hasta que se elige salir.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         
-        /**
-         * 
-         */
+        // Abrimos un Scanner y lo llamamos sc.
         Scanner sc;
         sc = new Scanner(System.in).useLocale(Locale.US);
 
+        // Tipo interfaz: puede contener cualquiera de los dos repositorios (patron repository)
+        
         LibroRepository<ModeloLibro> repo;
 
+        // Menu para seleccionar repositorio con el que se desea trabajar.
+        
         System.out.println("""
                            Con que repositorio quieres trabajar?
                            1. Base de datos MySQL
