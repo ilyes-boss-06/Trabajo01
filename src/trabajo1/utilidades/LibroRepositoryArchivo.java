@@ -94,6 +94,13 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         return resultado;
     }
     
+    /**
+     * Filtra los libros con precio dentro del rango indicado.
+     *
+     * @param precioMin precio minimo (incluido)
+     * @param precioMax precio maximo (incluido)
+     * @return lista de libros dentro del rango
+     */
     @Override
     public List<ModeloLibro> buscarPorRango(double precioMin, double precioMax) {
         List<ModeloLibro> libros = mostrarLibros();
@@ -108,6 +115,12 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         return resultado;
     }
 
+    /**
+     * Filtra los libros con stock igual o superior al minimo indicado.
+     *
+     * @param stockMinimo stock minimo
+     * @return lista de libros con ese stock o mas
+     */
     @Override
     public List<ModeloLibro> buscarPorCantidadStock(int stockMinimo) {
         List<ModeloLibro> libros = mostrarLibros();
@@ -122,6 +135,13 @@ public class LibroRepositoryArchivo implements LibroRepository<ModeloLibro> {
         return resultado;
     }
 
+    /**
+     * Anade un libro al final del archivo, comprobando antes que no exista
+     * otro libro con el mismo id.
+     *
+     * @param libro libro a insertar
+     * @return true si se ha insertado, false si el id ya existe o hay error
+     */
     @Override
     public boolean insertar(ModeloLibro libro) {
         List<ModeloLibro> libros = mostrarLibros();
