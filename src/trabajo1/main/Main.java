@@ -221,6 +221,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 3: muestra todos los libros de un autor.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso3(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Introduce el autor: ");
         String autor = sc.nextLine();
@@ -235,6 +241,12 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 2: busca un unico libro por su titulo y lo muestra.
+     * 
+     * @param sc
+     * @param repo 
+     */
     public static void caso2(Scanner sc, LibroRepository<ModeloLibro> repo) {
         System.out.print("Introduce el titulo: ");
         String titulo = sc.nextLine();
@@ -247,6 +259,11 @@ public class Main {
         }
     }
 
+    /**
+     * Opcion 1: muestra todos los libros del repositorio.
+     * 
+     * @param repo 
+     */
     public static void caso1(LibroRepository<ModeloLibro> repo) {
         List<ModeloLibro> libros = repo.mostrarLibros();
         if (libros.isEmpty()) {
