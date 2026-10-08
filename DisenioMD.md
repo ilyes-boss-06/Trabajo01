@@ -49,7 +49,7 @@
 
 ### Inventario
 
-1.Stock
+1. Stock
  - Copias de libro por tienda
  - Ultima vez que se conto el stock
 
@@ -111,3 +111,20 @@
 | Antología del cuento | Cortázar / Borges | Alianza | 18,00 | 6 | 28/02/2026 |
 
 >"algunos libros tienen más de un autor"
+
+### Cardinalidades del diagrama entidad-relación
+
+| **Relación**                      | **Cardinalidad** | **Razonamiento**                                                                          |
+| --------------------------------- | ---------------- | ----------------------------------------------------------------------------------------- |
+| Editorial – Libro (`Publica`)     | `1:N`            | Una editorial puede publicar muchos libros; cada libro pertenece a una sola editorial.    |
+| Autor – Libro (`Escribe`)         | `N:M`            | Un autor puede escribir muchos libros y un libro puede tener varios autores.              |
+| Tienda – Libro (`Inventario`)     | `N:M`            | Una tienda puede tener muchos libros y un libro puede estar disponible en varias tiendas. |
+| Pedido – Libro (`Contiene`)       | `N:M`            | Un pedido puede contener varios libros y un libro puede aparecer en muchos pedidos.       |
+| Cliente – Pedido (`Realiza`)      | `1:N`            | Un cliente puede realizar muchos pedidos; cada pedido pertenece a un solo cliente.        |
+| Tienda – Pedido (`Se_realiza_en`) | `1:N`            | Una tienda puede gestionar muchos pedidos; cada pedido se realiza en una sola tienda.     |
+| Tienda – Empleado (`Trabaja`)     | `1:N`            | Una tienda puede tener muchos empleados; cada empleado trabaja en una sola tienda.        |
+| Empleado – Pedido (`Atiende`)     | `1:N`            | Un empleado puede atender muchos pedidos; cada pedido es atendido por un empleado.        |
+
+#### Diagrama Entidad-Relacion
+
+![Imagen Entidad-Relacion](./Diagrama.png)
