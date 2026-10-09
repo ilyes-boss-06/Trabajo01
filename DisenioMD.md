@@ -13,81 +13,47 @@
 >Por ultimo, basandose en un ticket de ejemplo se nos pide que al revisar pedidos antiguos\
 >mantengan el precio de los productos que tenian en ese entonces.
 
-## Apartado 2. Analisis del caso
+## Apartado 2. Análisis del caso
 
-### Las tiendas
+### 2.1 Entidades y atributos
 
-1. Tiendas (Centro, Ribera *(está en el pueblo vecino de Aldeaverde)* y Universidad)
-- Nombre
-- Dirección
-- Numero de teléfono
-- Ciudad
+| Entidad | Atributos encontrados | Fragmento del caso |
+|---|---|---|
+| Tienda | nombre, dirección, teléfono, ciudad | §1: cada tienda tiene su nombre, dirección, teléfono y ciudad. |
+| Libro | ISBN, título, año de publicación, número de páginas, precio de catálogo | §2: datos guardados de cada libro. |
+| Editorial | nombre, país, teléfono de contacto | §2: datos guardados de cada editorial. |
+| Autor | nombre, nacionalidad, año de nacimiento | §2: datos guardados de cada autor. |
+| Stock | tienda, libro, número de copias, fecha del último recuento | §3: el stock se controla por libro y tienda. |
+| Empleado | DNI, nombre, apellidos, cargo, fecha de contratación, correo de trabajo, tienda | §4: datos de los empleados y tienda en la que trabajan. |
+| Cliente | nombre completo, correo electrónico, teléfono y fecha de alta como socio | §5: todos los clientes se registran; teléfono y fecha de alta se guardan para los socios. |
+| Pedido | identificador, fecha, forma de pago, estado, tienda, empleado y cliente | §6: datos del pedido que aparecen en el ticket. |
+| Detalle de pedido | pedido, libro, cantidad, precio cobrado por unidad | §6: cada pedido puede incluir varios libros y se guarda el precio realmente cobrado. |
 
-### El catalogo
+### 2.2 Relaciones
 
-1. Libros
- - ISBN (13 cifras)
- - Titulo
- - Año de publicación
- - Numero de paginas
- - Precio en el catalogo
+| Relación | Cardinalidad | Razonamiento |
+|---|---|---|
+| Editorial – Libro (`Publica`) | 1:N | Una editorial puede publicar muchos libros; cada libro pertenece a una sola editorial (§2). |
+| Autor – Libro (`Escribe`) | N:M | Un autor puede escribir varios libros y un libro puede tener varios autores (§2). |
+| Tienda – Libro (`Stock`) | N:M | Una tienda puede tener muchos libros y un libro puede estar en varias tiendas (§3). |
+| Tienda – Empleado (`Trabaja`) | 1:N | Una tienda tiene varios empleados; cada empleado trabaja en una sola tienda (§4). |
+| Cliente – Pedido (`Realiza`) | 1:N | Un cliente puede realizar varios pedidos; cada pedido corresponde a un cliente (§6). |
+| Tienda – Pedido (`Se realiza en`) | 1:N | Una tienda puede gestionar muchos pedidos; cada pedido se realiza en una tienda (§6). |
+| Empleado – Pedido (`Atiende`) | 1:N | Un empleado puede atender varios pedidos; cada pedido lo atiende un empleado (§6). |
+| Pedido – Libro (`Contiene`) | N:M | Un pedido puede contener varios libros y un libro puede aparecer en muchos pedidos. Se resuelve con `DetallePedido` (§6). |
 
-2. Editoriales 
- - Nombre
- - País
- - Teléfono de contacto
+Las relaciones N:M se resuelven mediante las tablas intermedias `Escribe`, `Stock` y `DetallePedido`. Estas tablas guardan datos propios de la relación: tipo de autoría; copias y fecha de recuento; y cantidad y precio unitario cobrado, respectivamente.
 
- >"Un libro lo publica una sola editorial"
+### 2.3 Datos descartados
 
-3. Autores 
- - Nombre
- - Nacionalidad
- - Año de nacimiento
-
- >"Hay libros escritos por dos o tres personas"\
- >"Distinguir si el autor es principal o colaborador en cada libro (por ejemplo, quién hace el prólogo)."
-
-### Inventario
-
-1. Stock
- - Copias de libro por tienda
- - Ultima vez que se conto el stock
-
->"Un libro puede no estar en una tienda; en ese caso, simplemente no aparece."
-
-### Personal
-
-1. Empleados
- - DNI
- - Nombre
- - Apellidos
- - Cargo
- - Fecha Contratacion
- - Correo de trabajo
-
->"En cada tienda trabajan varios empleados, y cada empleado trabaja en una sola tienda."\
->"Si un empleado cambia de tienda, no me importa guardar el historial; simplemente que figure en la nueva."
-
-2. Clientes
- - Nombre completo
- - Correo (único, lo usan para enviar avisos)
- - Telefono (Solo si socio)
- - Fecha Alta (Solo si socio)
-
->"Los clientes pueden darse de alta como socios y así obtienen descuentos."
-### Ventas
-
-1. Pedido
- - Nº de identificacion
- - Nombre del dependiente (+ Su Ocupacion)
- - Cliente
- - Fecha
- - Forma de pago (efectivo, tarjeta o bizum)
- - Estado (preparado, entregado o cancelado)
-
->"Un pedido se hace siempre en una tienda, lo atiende un empleado y lo compra un cliente."
->"Cada pedido puede llevar varios libros distintos, y de cada uno me interesa la cantidad."
->"Si abro un pedido antiguo y me enseña el precio nuevo, la factura ya no cuadra. Quiero que cada pedido guarde lo que realmente se cobró por cada libro."
+| Dato | Motivo |
+|---|---|
+| Total del pedido | Se puede calcular sumando `cantidad * precio_unitario` de sus líneas. |
+| Nombre de la editorial dentro de `Libro` como texto repetido | Se guarda una referencia a la tabla `Editorial`, evitando repetir sus datos en cada libro. |
+| Nombre del autor dentro de `Libro` como texto único | Un libro puede tener varios autores; se utiliza `Escribe` para relacionarlos. |
+| Stock como una única columna en `Libro` | El stock depende de la tienda y del libro, por lo que se guarda en `Stock`. |
+| Precio histórico tomado del catálogo actual | No sirve para pedidos antiguos; el precio cobrado se guarda en `DetallePedido`. |
+| Historial de cambios de tienda de los empleados | El caso indica que no hace falta conservarlo; solo se guarda la tienda actual. |
 
 ### Preguntas A Responder
 
@@ -99,9 +65,9 @@
 - ¿Qué empleado ha atendido más pedidos?
 - ¿Qué autores tienen libros en más de una editorial?
 
-### Notas Gestora
+## Notas Gestora
 
-#### lo que no queremos tener al final
+### lo que no queremos tener al final
 
 | Libro | Autor | Editorial | Precio | Stock | Contado el |
 |---|---|---|---|---|---|
@@ -112,19 +78,27 @@
 
 >"algunos libros tienen más de un autor"
 
-### Cardinalidades del diagrama entidad-relación
+## 3. Reglas de negocio
 
-| **Relación**                      | **Cardinalidad** | **Razonamiento**                                                                          |
-| --------------------------------- | ---------------- | ----------------------------------------------------------------------------------------- |
-| Editorial – Libro (`Publica`)     | `1:N`            | Una editorial puede publicar muchos libros; cada libro pertenece a una sola editorial.    |
-| Autor – Libro (`Escribe`)         | `N:M`            | Un autor puede escribir muchos libros y un libro puede tener varios autores.              |
-| Tienda – Libro (`Inventario`)     | `N:M`            | Una tienda puede tener muchos libros y un libro puede estar disponible en varias tiendas. |
-| Pedido – Libro (`Contiene`)       | `N:M`            | Un pedido puede contener varios libros y un libro puede aparecer en muchos pedidos.       |
-| Cliente – Pedido (`Realiza`)      | `1:N`            | Un cliente puede realizar muchos pedidos; cada pedido pertenece a un solo cliente.        |
-| Tienda – Pedido (`Se_realiza_en`) | `1:N`            | Una tienda puede gestionar muchos pedidos; cada pedido se realiza en una sola tienda.     |
-| Tienda – Empleado (`Trabaja`)     | `1:N`            | Una tienda puede tener muchos empleados; cada empleado trabaja en una sola tienda.        |
-| Empleado – Pedido (`Atiende`)     | `1:N`            | Un empleado puede atender muchos pedidos; cada pedido es atendido por un empleado.        |
-
-#### Diagrama Entidad-Relacion
+## Apartado 4. Diagrama Entidad-Relacion
 
 ![Imagen Entidad-Relacion](./Diagrama.png)
+
+| Relación | Tipo | Cómo se resuelve |
+|---|---|---|
+| Editorial – Libro | 1:N | `Libro.id_editorial` referencia `Editorial.id_editorial`. |
+| Autor – Libro | N:M | Tabla intermedia `Escribe`, con el atributo `tipo_autoria`. |
+| Tienda – Libro | N:M | Tabla intermedia `Stock`, con `copias` y `fecha_conteo`. |
+| Tienda – Empleado | 1:N | `Empleado.id_tienda` referencia `Tienda.id_tienda`. |
+| Cliente – Pedido | 1:N | `Pedido.id_cliente` referencia `Cliente.id_cliente`. |
+| Tienda – Pedido | 1:N | `Pedido.id_tienda` referencia `Tienda.id_tienda`. |
+| Empleado – Pedido | 1:N | `Pedido.dni` referencia `Empleado.dni`. |
+| Pedido – Libro | N:M | Tabla intermedia `DetallePedido`, con `cantidad` y `precio_unitario`. |
+
+## 5. Modelo lógico
+## 6. Script SQL (schema.sql)
+## 7. Diccionario de datos
+## 8. Decisiones de diseño
+## 9. Datos de prueba
+## 10. Consultas de prueba
+## 11. Limitaciones y mejoras futuras
