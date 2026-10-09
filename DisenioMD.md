@@ -214,7 +214,10 @@ Las relaciones N:M se resuelven mediante las tablas intermedias `Escribe`, `Stoc
 | `cantidad` | | |
 | `precio_unitario` | | |
 
-## 6. Script SQL (schema.sql)
+## 6. Script SQL (`schema.sql`)
+
+El archivo `schema.sql` contiene las instrucciones `CREATE DATABASE`, `USE` y `CREATE TABLE` para describir la estructura en MySQL. El archivo adicional `datos_prueba.sql` incluye ejemplos ficticios de registros. Aunque no sea necesario ejecutar una base de datos funcional para este caso, ambos archivos muestran cómo se crearían las tablas y cómo se relacionarían los datos.
+
 ## 7. Diccionario de datos
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
