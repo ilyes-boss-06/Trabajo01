@@ -80,6 +80,24 @@ Las relaciones N:M se resuelven mediante las tablas intermedias `Escribe`, `Stoc
 
 ## 3. Reglas de negocio
 
+1. Cada tienda tiene un identificador y un nombre, dirección, teléfono y ciudad.
+2. Cada libro se identifica por un ISBN de 13 cifras.
+3. Cada libro pertenece a una sola editorial; una editorial puede publicar varios libros.
+4. Un libro puede tener varios autores y un autor puede escribir varios libros.
+5. Para cada relación entre un libro y un autor se indica si su participación es principal o colaboradora.
+6. El stock se registra para cada combinación de tienda y libro e incluye el número de copias y la fecha del último recuento.
+7. Si un libro no está registrado en una tienda, no existe una fila de stock para esa combinación.
+8. Cada empleado trabaja en una sola tienda. Si cambia de tienda, se actualiza su tienda asignada y no se conserva el historial.
+9. El correo electrónico de cada cliente es único.
+10. Los clientes que no son socios también se registran con nombre completo y correo electrónico.
+11. El teléfono y la fecha de alta como socio pueden quedar vacíos cuando el cliente no es socio.
+12. Cada pedido pertenece a un cliente, se realiza en una tienda y lo atiende un empleado.
+13. La forma de pago de un pedido será efectivo, tarjeta o bizum.
+14. El estado de un pedido será preparado, entregado o cancelado.
+15. Un pedido puede incluir varios libros y cada línea guarda la cantidad de unidades.
+16. Cada línea de pedido guarda el precio unitario cobrado en ese momento, que no cambia si se modifica el precio del catálogo.
+17. Las cantidades y los precios no pueden ser negativos.
+
 ## Apartado 4. Diagrama Entidad-Relacion
 
 ![Imagen Entidad-Relacion](./Diagrama.png)
