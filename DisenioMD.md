@@ -114,6 +114,106 @@ Las relaciones N:M se resuelven mediante las tablas intermedias `Escribe`, `Stoc
 | Pedido – Libro | N:M | Tabla intermedia `DetallePedido`, con `cantidad` y `precio_unitario`. |
 
 ## 5. Modelo lógico
+
+### `Tienda`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_tienda` | PK | |
+| `nombre` | | |
+| `direccion` | | |
+| `telefono` | | |
+| `ciudad` | | |
+
+### `Editorial`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_editorial` | PK | |
+| `nombre` | | |
+| `pais` | | |
+| `telefono` | | |
+
+### `Libro`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `isbn` | PK | |
+| `titulo` | | |
+| `anio_publicacion` | | |
+| `numero_paginas` | | |
+| `precio_catalogo` | | |
+| `id_editorial` | FK | `Editorial.id_editorial` |
+
+### `Autor`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_autor` | PK | |
+| `nombre` | | |
+| `nacionalidad` | | |
+| `anio_nacimiento` | | |
+
+### `Escribe`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `isbn` | PK, FK | `Libro.isbn` |
+| `id_autor` | PK, FK | `Autor.id_autor` |
+| `tipo_autoria` | | |
+
+### `Stock`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_tienda` | PK, FK | `Tienda.id_tienda` |
+| `isbn` | PK, FK | `Libro.isbn` |
+| `copias` | | |
+| `fecha_conteo` | | |
+
+### `Empleado`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `dni` | PK | |
+| `nombre` | | |
+| `apellidos` | | |
+| `cargo` | | |
+| `fecha_contratacion` | | |
+| `correo_trabajo` | | |
+| `id_tienda` | FK | `Tienda.id_tienda` |
+
+### `Cliente`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_cliente` | PK | |
+| `nombre_completo` | | |
+| `correo` | UNIQUE | |
+| `telefono` | | |
+| `fecha_alta` | | |
+
+### `Pedido`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_pedido` | PK | |
+| `dni` | FK | `Empleado.dni` |
+| `id_cliente` | FK | `Cliente.id_cliente` |
+| `id_tienda` | FK | `Tienda.id_tienda` |
+| `fecha` | | |
+| `forma_pago` | | |
+| `estado` | | |
+
+### `DetallePedido`
+
+| Columna | Clave | Referencia |
+|---|---|---|
+| `id_pedido` | PK, FK | `Pedido.id_pedido` |
+| `isbn` | PK, FK | `Libro.isbn` |
+| `cantidad` | | |
+| `precio_unitario` | | |
+
 ## 6. Script SQL (schema.sql)
 ## 7. Diccionario de datos
 ## 8. Decisiones de diseño
