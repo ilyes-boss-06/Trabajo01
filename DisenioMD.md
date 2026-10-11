@@ -381,6 +381,27 @@ CREATE TABLE DetallePedido (
 | `copias` | INT | No | Copias disponibles, no negativo. 0 significa agotado. |
 | `fecha_conteo` | DATE | No | Fecha del último recuento de ese libro en esa tienda. |
 
+### `Empleado`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `dni` | CHAR(9) | No | DNI del empleado (PK). |
+| `nombre` | VARCHAR(60) | No | Nombre. |
+| `apellidos` | VARCHAR(100) | No | Apellidos. |
+| `cargo` | VARCHAR(60) | No | Ocupación (dependiente, encargado…). |
+| `fecha_contratacion` | DATE | No | Fecha de contratación. |
+| `correo_trabajo` | VARCHAR(100) | No | Correo de trabajo. |
+| `id_tienda` | INT | No | Tienda en la que trabaja actualmente (FK). |
+
+### `Cliente`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_cliente` | INT, autoincremental | No | Identificador del cliente (PK). |
+| `nombre_completo` | VARCHAR(150) | No | Nombre completo. |
+| `correo` | VARCHAR(100) | No | Correo electrónico, único; se usa para enviar avisos. |
+| `telefono` | VARCHAR(15) | Sí | Solo se guarda para socios. |
+| `fecha_alta` | DATE | Sí | Fecha de alta como socio. Si es NULL, el cliente no es socio. |
 
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
