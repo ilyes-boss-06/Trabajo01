@@ -324,6 +324,17 @@ CREATE TABLE DetallePedido (
 ```
 
 ## 7. Diccionario de datos
+
+### `Tienda`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_tienda` | INT, autoincremental | No | Identificador de la tienda (PK). |
+| `nombre` | VARCHAR(60) | No | Nombre comercial: Centro, Ribera o Universidad. |
+| `direccion` | VARCHAR(120) | No | Dirección postal. |
+| `telefono` | VARCHAR(15) | No | Teléfono de la tienda. |
+| `ciudad` | VARCHAR(60) | No | Ciudad o pueblo donde está (Ribera está en Aldeaverde). |
+
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
 ## 10. Consultas de prueba
