@@ -403,6 +403,27 @@ CREATE TABLE DetallePedido (
 | `telefono` | VARCHAR(15) | Sí | Solo se guarda para socios. |
 | `fecha_alta` | DATE | Sí | Fecha de alta como socio. Si es NULL, el cliente no es socio. |
 
+### `Pedido`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_pedido` | INT, autoincremental | No | Número identificativo del pedido (PK). |
+| `dni` | CHAR(9) | No | Empleado que lo atiende (FK). |
+| `id_cliente` | INT | No | Cliente que compra (FK). |
+| `id_tienda` | INT | No | Tienda donde se hace (FK). |
+| `fecha` | DATETIME | No | Fecha y hora del pedido. |
+| `forma_pago` | ENUM('efectivo','tarjeta','bizum') | No | Forma de pago. |
+| `estado` | ENUM('preparado','entregado','cancelado') | No | Estado del pedido. |
+
+### `DetallePedido`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_pedido` | INT | No | Pedido (PK, FK). |
+| `isbn` | CHAR(13) | No | Libro (PK, FK). |
+| `cantidad` | INT | No | Unidades pedidas, mayor que 0. |
+| `precio_unitario` | DECIMAL(8,2) | No | Precio realmente cobrado por unidad en ese pedido. |
+
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
 ## 10. Consultas de prueba
