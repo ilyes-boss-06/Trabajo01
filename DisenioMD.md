@@ -457,4 +457,45 @@ Los datos ficticios están en `datos_prueba.sql` y se cargan después de ejecuta
 Cada pregunta del apartado 2.4 tiene una consulta en el apartado 10 con el resultado esperado sobre estos datos. Para repetir las pruebas basta ejecutar `schema.sql`, luego `datos_prueba.sql` y por último la consulta correspondiente.
 
 ## 10. Consultas de prueba
+
+### 10.1 ¿Qué libros tiene la tienda Centro y cuántas copias quedan?
+
+```sql
+SELECT l.titulo, s.copias
+FROM Stock s
+JOIN Tienda t ON t.id_tienda = s.id_tienda
+JOIN Libro  l ON l.isbn = s.isbn
+WHERE t.nombre = 'Centro' AND s.copias > 0
+ORDER BY l.titulo;
+```
+
+| titulo | copias |
+|---|---|
+| Historias de cronopios | 3 |
+| La ciudad invisible | 1 |
+| Rayuela | 2 |
+
+### 10.2 ¿Cuál es el libro más vendido en cada tienda?
+
+```sql
+WITH ventas AS (
+    SELECT p.id_tienda, d.isbn, SUM(d.cantidad) AS unidades
+    FROM Pedido p
+    JOIN DetallePedido d ON d.id_pedido = p.id_pedido
+    WHERE p.estado <> 'cancelado'
+    GROUP BY p.id_tienda, d.isbn
+),
+ranking AS (
+    SELECT id_tienda, isbn, unidades,
+           RANK() OVER (PARTITION BY id_tienda ORDER BY unidades DESC) AS posicion
+    FROM ventas
+)
+SELECT t.nombre AS tienda, l.titulo, r.unidades
+FROM ranking r
+JOIN Tienda t ON t.id_tienda = r.id_tienda
+JOIN Libro  l ON l.isbn = r.isbn
+WHERE r.posicion = 1
+ORDER BY t.nombre, l.titulo;
+```
+
 ## 11. Limitaciones y mejoras futuras
