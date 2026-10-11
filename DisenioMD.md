@@ -218,6 +218,111 @@ Las relaciones N:M se resuelven mediante las tablas intermedias `Escribe`, `Stoc
 
 El archivo `schema.sql` contiene las instrucciones `CREATE DATABASE`, `USE` y `CREATE TABLE` para describir la estructura en MySQL. El archivo adicional `datos_prueba.sql` incluye ejemplos ficticios de registros. Aunque no sea necesario ejecutar una base de datos funcional para este caso, ambos archivos muestran cómo se crearían las tablas y cómo se relacionarían los datos.
 
+```sql
+CREATE DATABASE IF NOT EXISTS libreria
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE libreria;
+
+CREATE TABLE Tienda (
+    id_tienda INT AUTO_INCREMENT PRIMARY KEY,
+    nombre    VARCHAR(60)  NOT NULL,
+    direccion VARCHAR(120) NOT NULL,
+    telefono  VARCHAR(15)  NOT NULL,
+    ciudad    VARCHAR(60)  NOT NULL
+);
+
+CREATE TABLE Editorial (
+    id_editorial INT AUTO_INCREMENT PRIMARY KEY,
+    nombre       VARCHAR(100) NOT NULL,
+    pais         VARCHAR(60)  NOT NULL,
+    telefono     VARCHAR(15)
+);
+
+CREATE TABLE Libro (
+    isbn             CHAR(13) PRIMARY KEY,
+    titulo           VARCHAR(150) NOT NULL,
+    anio_publicacion SMALLINT     NOT NULL,
+    numero_paginas   SMALLINT     NOT NULL,
+    precio_catalogo  DECIMAL(8,2) NOT NULL,
+    id_editorial     INT          NOT NULL,
+    CONSTRAINT fk_libro_editorial FOREIGN KEY (id_editorial)
+        REFERENCES Editorial (id_editorial),
+    CONSTRAINT ck_libro_paginas CHECK (numero_paginas > 0),
+    CONSTRAINT ck_libro_precio  CHECK (precio_catalogo >= 0)
+);
+
+CREATE TABLE Autor (
+    id_autor        INT AUTO_INCREMENT PRIMARY KEY,
+    nombre          VARCHAR(100) NOT NULL,
+    nacionalidad    VARCHAR(60),
+    anio_nacimiento SMALLINT
+);
+
+CREATE TABLE Escribe (
+    isbn         CHAR(13) NOT NULL,
+    id_autor     INT      NOT NULL,
+    tipo_autoria ENUM('principal', 'colaborador') NOT NULL,
+    PRIMARY KEY (isbn, id_autor),
+    CONSTRAINT fk_escribe_libro FOREIGN KEY (isbn)     REFERENCES Libro (isbn),
+    CONSTRAINT fk_escribe_autor FOREIGN KEY (id_autor) REFERENCES Autor (id_autor)
+);
+
+CREATE TABLE Stock (
+    id_tienda    INT      NOT NULL,
+    isbn         CHAR(13) NOT NULL,
+    copias       INT      NOT NULL,
+    fecha_conteo DATE     NOT NULL,
+    PRIMARY KEY (id_tienda, isbn),
+    CONSTRAINT fk_stock_tienda FOREIGN KEY (id_tienda) REFERENCES Tienda (id_tienda),
+    CONSTRAINT fk_stock_libro  FOREIGN KEY (isbn)      REFERENCES Libro (isbn),
+    CONSTRAINT ck_stock_copias CHECK (copias >= 0)
+);
+
+CREATE TABLE Empleado (
+    dni                CHAR(9) PRIMARY KEY,
+    nombre             VARCHAR(60)  NOT NULL,
+    apellidos          VARCHAR(100) NOT NULL,
+    cargo              VARCHAR(60)  NOT NULL,
+    fecha_contratacion DATE         NOT NULL,
+    correo_trabajo     VARCHAR(100) NOT NULL,
+    id_tienda          INT          NOT NULL,
+    CONSTRAINT fk_empleado_tienda FOREIGN KEY (id_tienda) REFERENCES Tienda (id_tienda)
+);
+
+CREATE TABLE Cliente (
+    id_cliente      INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_completo VARCHAR(150) NOT NULL,
+    correo          VARCHAR(100) NOT NULL UNIQUE,
+    telefono        VARCHAR(15)  NULL,
+    fecha_alta      DATE         NULL
+);
+
+CREATE TABLE Pedido (
+    id_pedido  INT AUTO_INCREMENT PRIMARY KEY,
+    dni        CHAR(9)  NOT NULL,
+    id_cliente INT      NOT NULL,
+    id_tienda  INT      NOT NULL,
+    fecha      DATETIME NOT NULL,
+    forma_pago ENUM('efectivo', 'tarjeta', 'bizum') NOT NULL,
+    estado     ENUM('preparado', 'entregado', 'cancelado') NOT NULL,
+    CONSTRAINT fk_pedido_empleado FOREIGN KEY (dni)        REFERENCES Empleado (dni),
+    CONSTRAINT fk_pedido_cliente  FOREIGN KEY (id_cliente) REFERENCES Cliente (id_cliente),
+    CONSTRAINT fk_pedido_tienda   FOREIGN KEY (id_tienda)  REFERENCES Tienda (id_tienda)
+);
+
+CREATE TABLE DetallePedido (
+    id_pedido       INT          NOT NULL,
+    isbn            CHAR(13)     NOT NULL,
+    cantidad        INT          NOT NULL,
+    precio_unitario DECIMAL(8,2) NOT NULL,
+    PRIMARY KEY (id_pedido, isbn),
+    CONSTRAINT fk_detalle_pedido FOREIGN KEY (id_pedido) REFERENCES Pedido (id_pedido),
+    CONSTRAINT fk_detalle_libro  FOREIGN KEY (isbn)      REFERENCES Libro (isbn),
+    CONSTRAINT ck_detalle_cantidad CHECK (cantidad > 0),
+    CONSTRAINT ck_detalle_precio   CHECK (precio_unitario >= 0)
+);
+```
+
 ## 7. Diccionario de datos
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
