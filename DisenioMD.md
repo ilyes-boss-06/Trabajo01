@@ -438,5 +438,23 @@ CREATE TABLE DetallePedido (
 10. **Restricciones `CHECK`.** Cubren la regla 17: copias, cantidades y precios no pueden ser negativos, y las líneas de pedido tienen al menos una unidad.
 
 ## 9. Datos de prueba
+
+Los datos ficticios están en `datos_prueba.sql` y se cargan después de ejecutar `schema.sql`.
+
+| Tabla | Filas | Contenido |
+|---|---|---|
+| `Tienda` | 3 | Centro, Ribera (Aldeaverde) y Universidad. |
+| `Editorial` | 3 | Letras del Sur, Horizonte Editorial y Nube de Papel. |
+| `Autor` | 4 | García Márquez, Cortázar, Ana Torres y Luis Vega. |
+| `Libro` | 5 | De 12,90 a 25,00 €, repartidos en las tres editoriales. |
+| `Escribe` | 6 | Un libro con dos autores (principal y colaborador). |
+| `Stock` | 15 | Cada libro en cada tienda, con cinco casos de agotado (`copias = 0`). |
+| `Empleado` | 3 | Uno por tienda. |
+| `Cliente` | 4 | Tres socios y un cliente sin teléfono ni fecha de alta. |
+| `Pedido` | 7 | Todos de 2026, con tres formas de pago. |
+| `DetallePedido` | 14 | Dos líneas por pedido. |
+
+Cada pregunta del apartado 2.4 tiene una consulta en el apartado 10 con el resultado esperado sobre estos datos. Para repetir las pruebas basta ejecutar `schema.sql`, luego `datos_prueba.sql` y por último la consulta correspondiente.
+
 ## 10. Consultas de prueba
 ## 11. Limitaciones y mejoras futuras
