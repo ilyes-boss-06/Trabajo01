@@ -364,6 +364,24 @@ CREATE TABLE DetallePedido (
 | `nacionalidad` | VARCHAR(60) | Sí | Nacionalidad. |
 | `anio_nacimiento` | SMALLINT | Sí | Año de nacimiento. |
 
+### `Escribe`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `isbn` | CHAR(13) | No | Libro (PK, FK). |
+| `id_autor` | INT | No | Autor (PK, FK). |
+| `tipo_autoria` | ENUM('principal','colaborador') | No | Papel del autor en ese libro (por ejemplo, colaborador si hace el prólogo). |
+
+### `Stock`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_tienda` | INT | No | Tienda (PK, FK). |
+| `isbn` | CHAR(13) | No | Libro (PK, FK). |
+| `copias` | INT | No | Copias disponibles, no negativo. 0 significa agotado. |
+| `fecha_conteo` | DATE | No | Fecha del último recuento de ese libro en esa tienda. |
+
+
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
 ## 10. Consultas de prueba
