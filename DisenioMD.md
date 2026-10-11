@@ -344,6 +344,26 @@ CREATE TABLE DetallePedido (
 | `pais` | VARCHAR(60) | No | País de la editorial. |
 | `telefono` | VARCHAR(15) | Sí | Teléfono de contacto. |
 
+### `Libro`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `isbn` | CHAR(13) | No | ISBN de 13 cifras (PK). |
+| `titulo` | VARCHAR(150) | No | Título del libro. |
+| `anio_publicacion` | SMALLINT | No | Año de publicación. |
+| `numero_paginas` | SMALLINT | No | Número de páginas, mayor que 0. |
+| `precio_catalogo` | DECIMAL(8,2) | No | Precio actual en catálogo, no negativo. |
+| `id_editorial` | INT | No | Editorial que lo publica (FK). |
+
+### `Autor`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_autor` | INT, autoincremental | No | Identificador del autor (PK). |
+| `nombre` | VARCHAR(100) | No | Nombre del autor. |
+| `nacionalidad` | VARCHAR(60) | Sí | Nacionalidad. |
+| `anio_nacimiento` | SMALLINT | Sí | Año de nacimiento. |
+
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
 ## 10. Consultas de prueba
