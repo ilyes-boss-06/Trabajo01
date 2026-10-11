@@ -523,3 +523,13 @@ HAVING COUNT(*) > 2;
 ```
 
 ## 11. Limitaciones y mejoras futuras
+
+1. **Descuentos de socios.** El caso dice que los socios obtienen descuentos, pero no se indica cuánto ni cómo se aplican. No se modelan; bastaría un porcentaje en una tabla de condiciones y guardar el precio ya rebajado en `DetallePedido.precio_unitario`.
+2. **Pedidos sin líneas.** SQL no impide por sí solo crear un pedido sin libros. Esa obligatoriedad se tendría que controlar en la aplicación o con un procedimiento.
+3. **Stock no se descuenta solo.** Vender un libro no resta copias del stock; habría que hacerlo con un disparador o desde la aplicación.
+4. **Un recuento por libro y tienda.** `Stock` guarda solo la última fecha de recuento, no el historial de recuentos.
+5. **Cambio de tienda de empleados.** Por decisión de la gestora no se conserva el historial. Si algún día hiciera falta, habría que añadir una tabla de asignaciones con fechas.
+6. **Datos de prueba sin cancelados.** Ningún pedido de prueba tiene estado `cancelado`, así que el filtro `estado <> 'cancelado'` de las consultas no se ejercita con esos datos.
+7. **Un solo teléfono por cliente y editorial.** Si se necesitaran varios, habría que pasarlos a una tabla aparte.
+8. **Versión de MySQL.** Las restricciones `CHECK` solo se aplican a partir de MySQL 8.0.16, y `RANK() OVER` y `WITH` requieren 8.0.
+9. **Diagrama.** Conviene alinear los nombres y los atributos `es_socio` y `total` con el modelo lógico (ver tabla del apartado 8).
