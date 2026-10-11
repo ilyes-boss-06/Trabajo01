@@ -498,4 +498,28 @@ WHERE r.posicion = 1
 ORDER BY t.nombre, l.titulo;
 ```
 
+### 10.3 ¿Cuánto ha facturado cada tienda este año?
+
+```sql
+SELECT t.nombre AS tienda,
+       SUM(d.cantidad * d.precio_unitario) AS facturado
+FROM Tienda t
+JOIN Pedido p        ON p.id_tienda = t.id_tienda
+JOIN DetallePedido d ON d.id_pedido = p.id_pedido
+WHERE p.fecha >= '2026-01-01' AND p.fecha < '2027-01-01'
+  AND p.estado <> 'cancelado'
+GROUP BY t.id_tienda, t.nombre
+ORDER BY facturado DESC;
+```
+
+### 10.4 ¿Qué clientes han hecho más de dos pedidos?
+
+```sql
+SELECT c.nombre_completo, COUNT(*) AS pedidos
+FROM Cliente c
+JOIN Pedido p ON p.id_cliente = c.id_cliente
+GROUP BY c.id_cliente, c.nombre_completo
+HAVING COUNT(*) > 2;
+```
+
 ## 11. Limitaciones y mejoras futuras
