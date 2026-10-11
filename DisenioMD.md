@@ -425,6 +425,18 @@ CREATE TABLE DetallePedido (
 | `precio_unitario` | DECIMAL(8,2) | No | Precio realmente cobrado por unidad en ese pedido. |
 
 ## 8. Decisiones de diseño
+
+1. **Claves.** El libro usa el ISBN como clave natural y el empleado el DNI. El resto de entidades usa un identificador numérico, porque ni el nombre de una tienda ni el de un autor garantizan unicidad por sí solos.
+2. **Cliente y socio en una sola tabla.** Un socio es un cliente con teléfono y fecha de alta. Partirlos en dos tablas repetiría nombre y correo. `fecha_alta` rellena indica que es socio, por lo que no se guarda un indicador aparte que pudiera contradecirla.
+3. **Precio cobrado en la línea del pedido.** `DetallePedido.precio_unitario` copia el precio del catálogo en el momento de la venta. Cambiar `Libro.precio_catalogo` no altera pedidos antiguos y las facturas siguen cuadrando.
+4. **Total del pedido calculado, no guardado.** Guardarlo duplicaría información y podría desincronizarse de las líneas. Se obtiene con `SUM(cantidad * precio_unitario)`.
+5. **Stock como tabla propia.** La clave (tienda, libro) permite que un libro no esté en una tienda (no hay fila), que cada tienda tenga su cantidad y que cada recuento tenga su fecha.
+6. **Autoría en tabla intermedia.** `Escribe` admite varios autores por libro y guarda si cada uno es principal o colaborador.
+7. **Empleado sin historial.** `Empleado.id_tienda` guarda solo la tienda actual, como pide la gestora.
+8. **Valores cerrados con ENUM.** `forma_pago`, `estado` y `tipo_autoria` solo aceptan los valores indicados en el caso.
+9. **Sin eñ en los nombres de columna.** Se usa `anio_publicacion` y `anio_nacimiento` para evitar problemas de codificación.
+10. **Restricciones `CHECK`.** Cubren la regla 17: copias, cantidades y precios no pueden ser negativos, y las líneas de pedido tienen al menos una unidad.
+
 ## 9. Datos de prueba
 ## 10. Consultas de prueba
 ## 11. Limitaciones y mejoras futuras
