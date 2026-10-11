@@ -335,6 +335,15 @@ CREATE TABLE DetallePedido (
 | `telefono` | VARCHAR(15) | No | Teléfono de la tienda. |
 | `ciudad` | VARCHAR(60) | No | Ciudad o pueblo donde está (Ribera está en Aldeaverde). |
 
+### `Editorial`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_editorial` | INT, autoincremental | No | Identificador de la editorial (PK). |
+| `nombre` | VARCHAR(100) | No | Nombre de la editorial. |
+| `pais` | VARCHAR(60) | No | País de la editorial. |
+| `telefono` | VARCHAR(15) | Sí | Teléfono de contacto. |
+
 ## 8. Decisiones de diseño
 ## 9. Datos de prueba
 ## 10. Consultas de prueba
