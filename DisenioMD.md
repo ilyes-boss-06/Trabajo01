@@ -218,8 +218,318 @@ Las relaciones N:M se resuelven mediante las tablas intermedias `Escribe`, `Stoc
 
 El archivo `schema.sql` contiene las instrucciones `CREATE DATABASE`, `USE` y `CREATE TABLE` para describir la estructura en MySQL. El archivo adicional `datos_prueba.sql` incluye ejemplos ficticios de registros. Aunque no sea necesario ejecutar una base de datos funcional para este caso, ambos archivos muestran cómo se crearían las tablas y cómo se relacionarían los datos.
 
+```sql
+CREATE DATABASE IF NOT EXISTS libreria
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE libreria;
+
+CREATE TABLE Tienda (
+    id_tienda INT AUTO_INCREMENT PRIMARY KEY,
+    nombre    VARCHAR(60)  NOT NULL,
+    direccion VARCHAR(120) NOT NULL,
+    telefono  VARCHAR(15)  NOT NULL,
+    ciudad    VARCHAR(60)  NOT NULL
+);
+
+CREATE TABLE Editorial (
+    id_editorial INT AUTO_INCREMENT PRIMARY KEY,
+    nombre       VARCHAR(100) NOT NULL,
+    pais         VARCHAR(60)  NOT NULL,
+    telefono     VARCHAR(15)
+);
+
+CREATE TABLE Libro (
+    isbn             CHAR(13) PRIMARY KEY,
+    titulo           VARCHAR(150) NOT NULL,
+    anio_publicacion SMALLINT     NOT NULL,
+    numero_paginas   SMALLINT     NOT NULL,
+    precio_catalogo  DECIMAL(8,2) NOT NULL,
+    id_editorial     INT          NOT NULL,
+    CONSTRAINT fk_libro_editorial FOREIGN KEY (id_editorial)
+        REFERENCES Editorial (id_editorial),
+    CONSTRAINT ck_libro_paginas CHECK (numero_paginas > 0),
+    CONSTRAINT ck_libro_precio  CHECK (precio_catalogo >= 0)
+);
+
+CREATE TABLE Autor (
+    id_autor        INT AUTO_INCREMENT PRIMARY KEY,
+    nombre          VARCHAR(100) NOT NULL,
+    nacionalidad    VARCHAR(60),
+    anio_nacimiento SMALLINT
+);
+
+CREATE TABLE Escribe (
+    isbn         CHAR(13) NOT NULL,
+    id_autor     INT      NOT NULL,
+    tipo_autoria ENUM('principal', 'colaborador') NOT NULL,
+    PRIMARY KEY (isbn, id_autor),
+    CONSTRAINT fk_escribe_libro FOREIGN KEY (isbn)     REFERENCES Libro (isbn),
+    CONSTRAINT fk_escribe_autor FOREIGN KEY (id_autor) REFERENCES Autor (id_autor)
+);
+
+CREATE TABLE Stock (
+    id_tienda    INT      NOT NULL,
+    isbn         CHAR(13) NOT NULL,
+    copias       INT      NOT NULL,
+    fecha_conteo DATE     NOT NULL,
+    PRIMARY KEY (id_tienda, isbn),
+    CONSTRAINT fk_stock_tienda FOREIGN KEY (id_tienda) REFERENCES Tienda (id_tienda),
+    CONSTRAINT fk_stock_libro  FOREIGN KEY (isbn)      REFERENCES Libro (isbn),
+    CONSTRAINT ck_stock_copias CHECK (copias >= 0)
+);
+
+CREATE TABLE Empleado (
+    dni                CHAR(9) PRIMARY KEY,
+    nombre             VARCHAR(60)  NOT NULL,
+    apellidos          VARCHAR(100) NOT NULL,
+    cargo              VARCHAR(60)  NOT NULL,
+    fecha_contratacion DATE         NOT NULL,
+    correo_trabajo     VARCHAR(100) NOT NULL,
+    id_tienda          INT          NOT NULL,
+    CONSTRAINT fk_empleado_tienda FOREIGN KEY (id_tienda) REFERENCES Tienda (id_tienda)
+);
+
+CREATE TABLE Cliente (
+    id_cliente      INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_completo VARCHAR(150) NOT NULL,
+    correo          VARCHAR(100) NOT NULL UNIQUE,
+    telefono        VARCHAR(15)  NULL,
+    fecha_alta      DATE         NULL
+);
+
+CREATE TABLE Pedido (
+    id_pedido  INT AUTO_INCREMENT PRIMARY KEY,
+    dni        CHAR(9)  NOT NULL,
+    id_cliente INT      NOT NULL,
+    id_tienda  INT      NOT NULL,
+    fecha      DATETIME NOT NULL,
+    forma_pago ENUM('efectivo', 'tarjeta', 'bizum') NOT NULL,
+    estado     ENUM('preparado', 'entregado', 'cancelado') NOT NULL,
+    CONSTRAINT fk_pedido_empleado FOREIGN KEY (dni)        REFERENCES Empleado (dni),
+    CONSTRAINT fk_pedido_cliente  FOREIGN KEY (id_cliente) REFERENCES Cliente (id_cliente),
+    CONSTRAINT fk_pedido_tienda   FOREIGN KEY (id_tienda)  REFERENCES Tienda (id_tienda)
+);
+
+CREATE TABLE DetallePedido (
+    id_pedido       INT          NOT NULL,
+    isbn            CHAR(13)     NOT NULL,
+    cantidad        INT          NOT NULL,
+    precio_unitario DECIMAL(8,2) NOT NULL,
+    PRIMARY KEY (id_pedido, isbn),
+    CONSTRAINT fk_detalle_pedido FOREIGN KEY (id_pedido) REFERENCES Pedido (id_pedido),
+    CONSTRAINT fk_detalle_libro  FOREIGN KEY (isbn)      REFERENCES Libro (isbn),
+    CONSTRAINT ck_detalle_cantidad CHECK (cantidad > 0),
+    CONSTRAINT ck_detalle_precio   CHECK (precio_unitario >= 0)
+);
+```
+
 ## 7. Diccionario de datos
+
+### `Tienda`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_tienda` | INT, autoincremental | No | Identificador de la tienda (PK). |
+| `nombre` | VARCHAR(60) | No | Nombre comercial: Centro, Ribera o Universidad. |
+| `direccion` | VARCHAR(120) | No | Dirección postal. |
+| `telefono` | VARCHAR(15) | No | Teléfono de la tienda. |
+| `ciudad` | VARCHAR(60) | No | Ciudad o pueblo donde está (Ribera está en Aldeaverde). |
+
+### `Editorial`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_editorial` | INT, autoincremental | No | Identificador de la editorial (PK). |
+| `nombre` | VARCHAR(100) | No | Nombre de la editorial. |
+| `pais` | VARCHAR(60) | No | País de la editorial. |
+| `telefono` | VARCHAR(15) | Sí | Teléfono de contacto. |
+
+### `Libro`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `isbn` | CHAR(13) | No | ISBN de 13 cifras (PK). |
+| `titulo` | VARCHAR(150) | No | Título del libro. |
+| `anio_publicacion` | SMALLINT | No | Año de publicación. |
+| `numero_paginas` | SMALLINT | No | Número de páginas, mayor que 0. |
+| `precio_catalogo` | DECIMAL(8,2) | No | Precio actual en catálogo, no negativo. |
+| `id_editorial` | INT | No | Editorial que lo publica (FK). |
+
+### `Autor`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_autor` | INT, autoincremental | No | Identificador del autor (PK). |
+| `nombre` | VARCHAR(100) | No | Nombre del autor. |
+| `nacionalidad` | VARCHAR(60) | Sí | Nacionalidad. |
+| `anio_nacimiento` | SMALLINT | Sí | Año de nacimiento. |
+
+### `Escribe`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `isbn` | CHAR(13) | No | Libro (PK, FK). |
+| `id_autor` | INT | No | Autor (PK, FK). |
+| `tipo_autoria` | ENUM('principal','colaborador') | No | Papel del autor en ese libro (por ejemplo, colaborador si hace el prólogo). |
+
+### `Stock`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_tienda` | INT | No | Tienda (PK, FK). |
+| `isbn` | CHAR(13) | No | Libro (PK, FK). |
+| `copias` | INT | No | Copias disponibles, no negativo. 0 significa agotado. |
+| `fecha_conteo` | DATE | No | Fecha del último recuento de ese libro en esa tienda. |
+
+### `Empleado`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `dni` | CHAR(9) | No | DNI del empleado (PK). |
+| `nombre` | VARCHAR(60) | No | Nombre. |
+| `apellidos` | VARCHAR(100) | No | Apellidos. |
+| `cargo` | VARCHAR(60) | No | Ocupación (dependiente, encargado…). |
+| `fecha_contratacion` | DATE | No | Fecha de contratación. |
+| `correo_trabajo` | VARCHAR(100) | No | Correo de trabajo. |
+| `id_tienda` | INT | No | Tienda en la que trabaja actualmente (FK). |
+
+### `Cliente`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_cliente` | INT, autoincremental | No | Identificador del cliente (PK). |
+| `nombre_completo` | VARCHAR(150) | No | Nombre completo. |
+| `correo` | VARCHAR(100) | No | Correo electrónico, único; se usa para enviar avisos. |
+| `telefono` | VARCHAR(15) | Sí | Solo se guarda para socios. |
+| `fecha_alta` | DATE | Sí | Fecha de alta como socio. Si es NULL, el cliente no es socio. |
+
+### `Pedido`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_pedido` | INT, autoincremental | No | Número identificativo del pedido (PK). |
+| `dni` | CHAR(9) | No | Empleado que lo atiende (FK). |
+| `id_cliente` | INT | No | Cliente que compra (FK). |
+| `id_tienda` | INT | No | Tienda donde se hace (FK). |
+| `fecha` | DATETIME | No | Fecha y hora del pedido. |
+| `forma_pago` | ENUM('efectivo','tarjeta','bizum') | No | Forma de pago. |
+| `estado` | ENUM('preparado','entregado','cancelado') | No | Estado del pedido. |
+
+### `DetallePedido`
+
+| Columna | Tipo | Nulo | Descripción |
+|---|---|---|---|
+| `id_pedido` | INT | No | Pedido (PK, FK). |
+| `isbn` | CHAR(13) | No | Libro (PK, FK). |
+| `cantidad` | INT | No | Unidades pedidas, mayor que 0. |
+| `precio_unitario` | DECIMAL(8,2) | No | Precio realmente cobrado por unidad en ese pedido. |
+
 ## 8. Decisiones de diseño
+
+1. **Claves.** El libro usa el ISBN como clave natural y el empleado el DNI. El resto de entidades usa un identificador numérico, porque ni el nombre de una tienda ni el de un autor garantizan unicidad por sí solos.
+2. **Cliente y socio en una sola tabla.** Un socio es un cliente con teléfono y fecha de alta. Partirlos en dos tablas repetiría nombre y correo. `fecha_alta` rellena indica que es socio, por lo que no se guarda un indicador aparte que pudiera contradecirla.
+3. **Precio cobrado en la línea del pedido.** `DetallePedido.precio_unitario` copia el precio del catálogo en el momento de la venta. Cambiar `Libro.precio_catalogo` no altera pedidos antiguos y las facturas siguen cuadrando.
+4. **Total del pedido calculado, no guardado.** Guardarlo duplicaría información y podría desincronizarse de las líneas. Se obtiene con `SUM(cantidad * precio_unitario)`.
+5. **Stock como tabla propia.** La clave (tienda, libro) permite que un libro no esté en una tienda (no hay fila), que cada tienda tenga su cantidad y que cada recuento tenga su fecha.
+6. **Autoría en tabla intermedia.** `Escribe` admite varios autores por libro y guarda si cada uno es principal o colaborador.
+7. **Empleado sin historial.** `Empleado.id_tienda` guarda solo la tienda actual, como pide la gestora.
+8. **Valores cerrados con ENUM.** `forma_pago`, `estado` y `tipo_autoria` solo aceptan los valores indicados en el caso.
+9. **Sin eñ en los nombres de columna.** Se usa `anio_publicacion` y `anio_nacimiento` para evitar problemas de codificación.
+10. **Restricciones `CHECK`.** Cubren la regla 17: copias, cantidades y precios no pueden ser negativos, y las líneas de pedido tienen al menos una unidad.
+
 ## 9. Datos de prueba
+
+Los datos ficticios están en `datos_prueba.sql` y se cargan después de ejecutar `schema.sql`.
+
+| Tabla | Filas | Contenido |
+|---|---|---|
+| `Tienda` | 3 | Centro, Ribera (Aldeaverde) y Universidad. |
+| `Editorial` | 3 | Letras del Sur, Horizonte Editorial y Nube de Papel. |
+| `Autor` | 4 | García Márquez, Cortázar, Ana Torres y Luis Vega. |
+| `Libro` | 5 | De 12,90 a 25,00 €, repartidos en las tres editoriales. |
+| `Escribe` | 6 | Un libro con dos autores (principal y colaborador). |
+| `Stock` | 15 | Cada libro en cada tienda, con cinco casos de agotado (`copias = 0`). |
+| `Empleado` | 3 | Uno por tienda. |
+| `Cliente` | 4 | Tres socios y un cliente sin teléfono ni fecha de alta. |
+| `Pedido` | 7 | Todos de 2026, con tres formas de pago. |
+| `DetallePedido` | 14 | Dos líneas por pedido. |
+
+Cada pregunta del apartado 2.4 tiene una consulta en el apartado 10 con el resultado esperado sobre estos datos. Para repetir las pruebas basta ejecutar `schema.sql`, luego `datos_prueba.sql` y por último la consulta correspondiente.
+
 ## 10. Consultas de prueba
+
+### 10.1 ¿Qué libros tiene la tienda Centro y cuántas copias quedan?
+
+```sql
+SELECT l.titulo, s.copias
+FROM Stock s
+JOIN Tienda t ON t.id_tienda = s.id_tienda
+JOIN Libro  l ON l.isbn = s.isbn
+WHERE t.nombre = 'Centro' AND s.copias > 0
+ORDER BY l.titulo;
+```
+
+| titulo | copias |
+|---|---|
+| Historias de cronopios | 3 |
+| La ciudad invisible | 1 |
+| Rayuela | 2 |
+
+### 10.2 ¿Cuál es el libro más vendido en cada tienda?
+
+```sql
+WITH ventas AS (
+    SELECT p.id_tienda, d.isbn, SUM(d.cantidad) AS unidades
+    FROM Pedido p
+    JOIN DetallePedido d ON d.id_pedido = p.id_pedido
+    WHERE p.estado <> 'cancelado'
+    GROUP BY p.id_tienda, d.isbn
+),
+ranking AS (
+    SELECT id_tienda, isbn, unidades,
+           RANK() OVER (PARTITION BY id_tienda ORDER BY unidades DESC) AS posicion
+    FROM ventas
+)
+SELECT t.nombre AS tienda, l.titulo, r.unidades
+FROM ranking r
+JOIN Tienda t ON t.id_tienda = r.id_tienda
+JOIN Libro  l ON l.isbn = r.isbn
+WHERE r.posicion = 1
+ORDER BY t.nombre, l.titulo;
+```
+
+### 10.3 ¿Cuánto ha facturado cada tienda este año?
+
+```sql
+SELECT t.nombre AS tienda,
+       SUM(d.cantidad * d.precio_unitario) AS facturado
+FROM Tienda t
+JOIN Pedido p        ON p.id_tienda = t.id_tienda
+JOIN DetallePedido d ON d.id_pedido = p.id_pedido
+WHERE p.fecha >= '2026-01-01' AND p.fecha < '2027-01-01'
+  AND p.estado <> 'cancelado'
+GROUP BY t.id_tienda, t.nombre
+ORDER BY facturado DESC;
+```
+
+### 10.4 ¿Qué clientes han hecho más de dos pedidos?
+
+```sql
+SELECT c.nombre_completo, COUNT(*) AS pedidos
+FROM Cliente c
+JOIN Pedido p ON p.id_cliente = c.id_cliente
+GROUP BY c.id_cliente, c.nombre_completo
+HAVING COUNT(*) > 2;
+```
+
 ## 11. Limitaciones y mejoras futuras
+
+1. **Descuentos de socios.** El caso dice que los socios obtienen descuentos, pero no se indica cuánto ni cómo se aplican. No se modelan; bastaría un porcentaje en una tabla de condiciones y guardar el precio ya rebajado en `DetallePedido.precio_unitario`.
+2. **Pedidos sin líneas.** SQL no impide por sí solo crear un pedido sin libros. Esa obligatoriedad se tendría que controlar en la aplicación o con un procedimiento.
+3. **Stock no se descuenta solo.** Vender un libro no resta copias del stock; habría que hacerlo con un disparador o desde la aplicación.
+4. **Un recuento por libro y tienda.** `Stock` guarda solo la última fecha de recuento, no el historial de recuentos.
+5. **Cambio de tienda de empleados.** Por decisión de la gestora no se conserva el historial. Si algún día hiciera falta, habría que añadir una tabla de asignaciones con fechas.
+6. **Datos de prueba sin cancelados.** Ningún pedido de prueba tiene estado `cancelado`, así que el filtro `estado <> 'cancelado'` de las consultas no se ejercita con esos datos.
+7. **Un solo teléfono por cliente y editorial.** Si se necesitaran varios, habría que pasarlos a una tabla aparte.
+8. **Versión de MySQL.** Las restricciones `CHECK` solo se aplican a partir de MySQL 8.0.16, y `RANK() OVER` y `WITH` requieren 8.0.
+9. **Diagrama.** Conviene alinear los nombres y los atributos `es_socio` y `total` con el modelo lógico (ver tabla del apartado 8).
