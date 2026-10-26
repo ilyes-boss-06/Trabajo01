@@ -33,7 +33,7 @@ El `.env` debe estar en la carpeta desde la que se lanza la aplicación (la raí
 ## Documentación
 
 - [Manual de despliegue completo (PDF)](./manual_despliegue.pdf)
-- [JavaDoc](javadoc/index.html)
+- [JavaDoc](../dist/javadoc/index.html)
 
 ## Autores
 
